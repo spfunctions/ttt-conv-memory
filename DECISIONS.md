@@ -34,31 +34,50 @@ We also opened upstream issue #3 in parallel — if the authors release a checkp
 
 ---
 
-## D-002 — `ttt_chunk = 1024` for both training and eval (deviates from paper's 4096)
+## D-002 — `ttt_chunk = 64` for both training and eval (deviates from paper's 4096)
 
-**Decided:** 2026-04-28T08:40:00Z
+**Decided:** 2026-04-28T09:30:00Z (revised from initial 1024)
 **Status:** active
 
 ### Context
 
-Paper sets `ttt_chunk = 4096`. The TTT update only fires when `present_h.shape[1] >= ttt_chunk`. Our conversational samples are 200-1500 tokens. At paper's setting, **TTT update never fires on a single conversation**, defeating the experiment.
+Paper sets `ttt_chunk = 4096`. The TTT update only fires when `present_h.shape[1] >= ttt_chunk`. Empirically measured token counts of our generated benchmark:
+- L1/L3 conversation: mean 140, min 123, max 158 tokens
+- L2 conversation (same as L1): mean 140
+- Probe full prompt (system + question + "回答："): ≈40-60 tokens
+- Distractor (L3): ≈2000-4000 tokens
 
-Options:
-1. Keep `ttt_chunk=4096`, pad/repeat conversations to ≥4096 tokens at inference time. (Mismatches training distribution; padding is artificial.)
-2. Lower `ttt_chunk` to match expected conversation length, train and eval at the same setting.
-3. Lower `ttt_chunk` to a small value (e.g. 256) so multiple updates fire per conversation.
+Initially set `ttt_chunk = 1024` (compromise between paper's 4096 and conversation length). Then realized: with 140-token conversations and 1024-chunk, the TTT update **never fires**. The whole experiment would measure noise.
 
 ### Decision
 
-`ttt_chunk = 1024` for both training and eval. Conversations <1024 tokens get one update at end-of-input; longer conversations get one update per 1024-token block.
+`ttt_chunk = 64` for both training and eval.
 
 ### Why
 
-We're training from scratch (B-mini), so the chunk size is a free parameter. 1024 covers most conversation lengths in a single chunk while still being short enough that long dialogues see multiple updates. Matching train and eval is critical — paper notes that TTT-train at one chunk size and TTT-infer at a different chunk size degrades.
+- **All 300 conversations trigger ≥1 update** (123 > 64): the TTT mechanism actually engages. Most conversations get 1-2 chunk updates per forward pass.
+- **All 2620 probes are too short to trigger updates** (probe full prompt ≈ 40-60 tokens, < 64). Probes don't pollute the conversation-modified fast weights — clean A/B separation.
+- **Distractor adds many updates** (2000-4000 tokens / 64 ≈ 30-60 updates). Tests the distractor effect at scale.
+- **Training at seq_len=1024 with chunk=64 = 16 chunks per sample = 15 updates per backward**. Plenty of update signal during training.
 
 ### Risk
 
-If the trained TTT mechanism is sensitive to chunk size, our results aren't directly comparable to paper-scale training at 4096. We document this and treat the absolute numbers as our setup's, not the paper's.
+- This is much smaller than paper's 4096. The TTT layers may behave qualitatively differently at this chunk size — for example, the per-update gradient is smaller (less context per chunk), and accumulation across many tiny chunks may dominate.
+- Mitigation: matched chunk size between train and eval (`ttt_chunk=64` everywhere) to avoid distribution shift.
+- If the experiment shows weak signal, the natural next iteration is to extend conversation length in benchmark_v2 (multi-paragraph, multi-topic dialogues) and increase chunk back toward 256-512.
+
+### Numbers we computed
+
+```
+L1/L3 conv tokens: mean=140, min=123, max=158
+L1/L3 probe tokens (question only): mean=6, min=3, max=10
+L2 probe tokens: mean=7, min=5, max=10
+
+at ttt_chunk=64:
+  conversations triggering update: 300/300
+  L1/L3 probe questions triggering: 0/2192
+  L2 probe questions triggering: 0/425
+```
 
 ---
 
@@ -163,6 +182,35 @@ Eval generation hyperparameters.
 - Greedy → deterministic, reproducible
 - bf16 → matches training, fits in 40G with KV cache for 4096+ tokens
 - 64 tokens → all factual answers fit (most are <10 tokens; 64 absorbs verbose phrasings without inflating runtime)
+
+---
+
+---
+
+## D-007 — SDPA attention, no flash-attn (skip 30+ minute compile)
+
+**Decided:** 2026-04-28T09:35:00Z
+**Status:** active
+
+### Context
+
+Upstream pins `flash-attn==2.8.3`. On Modal's pip mirror with cu128 wheels there's no matching prebuilt wheel, so install falls back to `setup.py bdist_wheel` — observed ~5+ minutes into the build with no end in sight (typical flash-attn source compile is 20-40 minutes on a 16-core machine).
+
+### Decision
+
+Skip flash-attn entirely. Use PyTorch SDPA (`attn_implementation="sdpa"`).
+
+### Why
+
+- The In-Place TTT modeling code dispatches attention through `config._attn_implementation` — SDPA is a fully supported branch (`Qwen3PreTrainedModel._supports_sdpa = True`).
+- Upstream's `from transformers.modeling_flash_attention_utils import FlashAttentionKwargs` imports a typed-dict from transformers, not from flash_attn — so this import works without the package.
+- SDPA on A100 is within ~1.2-1.5x of flash-attn for our seq lengths (≤4096). For our 12-15 GPU-hour total budget the difference is ~3-4 GPU-hours, but skipping flash-attn build saves ~30+ minutes of every cold image build.
+- We're not using upstream's training framework (VeOmni); we're using HF transformers directly. VeOmni might have hard flash-attn deps but we don't touch it.
+
+### Risk
+
+- A code path inside upstream's `inference_model/` that we haven't read could `import flash_attn` directly. If so, `import inference_model` will fail at import time. Workaround: install flash-attn lazily on first crash.
+- SDPA may have small numerical differences vs flash-attn at large scale. Not relevant for our experiment scope.
 
 ---
 

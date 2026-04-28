@@ -36,7 +36,7 @@ def main():
     parser.add_argument("--grad-accum", type=int, default=2)
     parser.add_argument("--lr", type=float, default=5e-6)
     parser.add_argument("--seq-len", type=int, default=1024)
-    parser.add_argument("--ttt-chunk", type=int, default=1024)
+    parser.add_argument("--ttt-chunk", type=int, default=64)
     parser.add_argument("--dataset", type=str, default="HuggingFaceH4/no_robots")
     parser.add_argument("--dataset-split", type=str, default="train")
     parser.add_argument("--out", type=Path, default=Path("checkpoints/ttt_minimal.pt"))

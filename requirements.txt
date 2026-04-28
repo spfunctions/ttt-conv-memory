@@ -1,13 +1,14 @@
-# Pinned to match ByteDance-Seed/In-Place-TTT exact versions.
-# Python 3.11 required (flash-attn wheel is cp311-only).
+# Pinned to match ByteDance-Seed/In-Place-TTT versions where it matters.
+# Python 3.11 required if you install flash-attn (the prebuilt wheel is cp311-only).
 
 # Core ML stack
 torch==2.8.0
 torchvision==0.23.0
 torchaudio==2.8.0
 
-# Flash attention (the cp311 wheel matches the upstream pin)
-flash-attn==2.8.3
+# Flash attention is OPTIONAL — we use SDPA by default (set in model_utils.py
+# via attn_impl="sdpa"). If you want to install it for ~marginal speedup:
+#   pip install flash-attn==2.8.3 --no-build-isolation
 
 # Transformers (hard pin from upstream)
 transformers==4.57.3

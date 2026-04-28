@@ -1,9 +1,12 @@
 """
 sanity.py — pre-flight sanity checks for the TTT mechanism.
 
-Five checks (matches SPEC.md):
-  1. TTT-on vs TTT-off output diverges on long input.
-  2. ttt_proj weight norm > 0, ttt_conv weight norm > 0.
+Five checks (matches SPEC.md). Run AFTER training, otherwise check #1 + #2 will
+naturally fail because TTT params are at init (ttt_conv is zero-init).
+
+  1. With trained TTT params, the model output differs from zero-TTT-params on
+     the same long input. (i.e. TTT actually does something.)
+  2. ttt_proj weight norm > 0, ttt_conv weight norm > 0 after training.
   3. Fast weight is reproducible (same input twice → same past_w).
   4. Fast weight is input-dependent (different inputs → different past_w).
   5. KV-stripped cache forward works (no shape errors, sensible output).
@@ -20,18 +23,19 @@ from pathlib import Path
 import torch
 
 from model_utils import (
-    disable_ttt_updates,
-    enable_ttt_updates,
     fresh_ttt_cache,
     kv_stripped_clone,
     load_ttt_params,
     load_ttt_qwen3,
+    restore_ttt_params,
+    snapshot_ttt_params,
     ttt_param_norms,
+    zero_ttt_params,
 )
 
 
-def long_dummy_text(tokenizer, target_tokens: int = 1500) -> str:
-    """A piece of text that comfortably exceeds ttt_chunk so TTT update fires."""
+def long_dummy_text(tokenizer, target_tokens: int = 200) -> str:
+    """Text that comfortably exceeds ttt_chunk so TTT update fires."""
     seed = "今天天气不错，我们讨论一下项目进度。负责人是张伟，工号7742，办公室在3号楼12层。"
     out = ""
     while len(tokenizer.encode(out)) < target_tokens:
@@ -39,37 +43,38 @@ def long_dummy_text(tokenizer, target_tokens: int = 1500) -> str:
     return out
 
 
-def check_1_ttt_changes_output(model, tokenizer) -> tuple[bool, str]:
-    text = long_dummy_text(tokenizer, target_tokens=1500)
+def check_1_trained_vs_zero(model, tokenizer, trained_snapshot) -> tuple[bool, str]:
+    text = long_dummy_text(tokenizer, target_tokens=200)
     inp = tokenizer(text, return_tensors="pt").to(model.device)
-    # Pass 1 — TTT off
-    disable_ttt_updates(model)
+    probe = tokenizer("总结：", return_tensors="pt").to(model.device)
+
+    # Pass 1 — zeroed TTT
+    zero_ttt_params(model)
     with torch.no_grad():
-        cache_off = fresh_ttt_cache()
-        _ = model(input_ids=inp["input_ids"], past_key_values=cache_off, use_cache=True)
-        probe = tokenizer("总结一下：", return_tensors="pt").to(model.device)
-        out_off = model.generate(
-            input_ids=probe["input_ids"], past_key_values=cache_off,
+        cache_zero = fresh_ttt_cache()
+        _ = model(input_ids=inp["input_ids"], past_key_values=cache_zero, use_cache=True)
+        out_zero = model.generate(
+            input_ids=probe["input_ids"], past_key_values=cache_zero,
             max_new_tokens=20, do_sample=False,
             pad_token_id=tokenizer.pad_token_id or tokenizer.eos_token_id,
         )
-    text_off = tokenizer.decode(out_off[0], skip_special_tokens=True)
+    text_zero = tokenizer.decode(out_zero[0], skip_special_tokens=True)
 
-    # Pass 2 — TTT on
-    enable_ttt_updates(model)
+    # Pass 2 — trained TTT
+    restore_ttt_params(model, trained_snapshot)
     with torch.no_grad():
-        cache_on = fresh_ttt_cache()
-        _ = model(input_ids=inp["input_ids"], past_key_values=cache_on, use_cache=True)
-        out_on = model.generate(
-            input_ids=probe["input_ids"], past_key_values=cache_on,
+        cache_trained = fresh_ttt_cache()
+        _ = model(input_ids=inp["input_ids"], past_key_values=cache_trained, use_cache=True)
+        out_trained = model.generate(
+            input_ids=probe["input_ids"], past_key_values=cache_trained,
             max_new_tokens=20, do_sample=False,
             pad_token_id=tokenizer.pad_token_id or tokenizer.eos_token_id,
         )
-    text_on = tokenizer.decode(out_on[0], skip_special_tokens=True)
+    text_trained = tokenizer.decode(out_trained[0], skip_special_tokens=True)
 
-    if text_off == text_on:
-        return False, f"identical outputs:\n  off: {text_off!r}\n  on : {text_on!r}"
-    return True, f"differ ✓\n  off: {text_off!r}\n  on : {text_on!r}"
+    if text_zero == text_trained:
+        return False, f"identical outputs:\n  zero    : {text_zero!r}\n  trained : {text_trained!r}"
+    return True, f"trained ≠ zero ✓\n  zero    : {text_zero!r}\n  trained : {text_trained!r}"
 
 
 def check_2_ttt_params_nonzero(model) -> tuple[bool, str]:
@@ -77,13 +82,13 @@ def check_2_ttt_params_nonzero(model) -> tuple[bool, str]:
     proj_norms = [v for k, v in norms.items() if "ttt_proj" in k]
     conv_norms = [v for k, v in norms.items() if "ttt_conv" in k]
     if not proj_norms or not conv_norms:
-        return False, f"no TTT params found: {list(norms.keys())[:5]}"
+        return False, f"no TTT params found in model: {list(norms.keys())[:5]}"
     if min(proj_norms) <= 0 or sum(conv_norms) == 0:
         return False, (
-            f"TTT params at init? proj norms {proj_norms[:3]}, conv norms {conv_norms[:3]} "
-            f"(conv at init is zero — needs training)"
+            f"TTT params at init? proj norms[:3] {proj_norms[:3]}, conv norms[:3] {conv_norms[:3]} "
+            f"(zero ttt_conv = untrained — needs training)"
         )
-    return True, f"proj norms {proj_norms[:2]}, conv norms {conv_norms[:2]}"
+    return True, f"proj norms[:2] {[f'{x:.3f}' for x in proj_norms[:2]]}, conv norms[:2] {[f'{x:.3f}' for x in conv_norms[:2]]}"
 
 
 def _extract_past_w(cache, layer_idx: int = 0):
@@ -97,39 +102,35 @@ def _extract_past_w(cache, layer_idx: int = 0):
     return st[2].detach().clone()
 
 
-def check_3_fast_weight_reproducible(model, tokenizer) -> tuple[bool, str]:
-    text = long_dummy_text(tokenizer, target_tokens=1500)
+def check_3_fast_weight_reproducible(model, tokenizer, ttt_layer_idx: int = 0) -> tuple[bool, str]:
+    text = long_dummy_text(tokenizer, target_tokens=200)
     inp = tokenizer(text, return_tensors="pt").to(model.device)
-    enable_ttt_updates(model)
 
-    # First pass
     cache_a = fresh_ttt_cache()
     with torch.no_grad():
         _ = model(input_ids=inp["input_ids"], past_key_values=cache_a, use_cache=True)
-    pw_a = _extract_past_w(cache_a)
+    pw_a = _extract_past_w(cache_a, ttt_layer_idx)
 
-    # Second pass — same input
     cache_b = fresh_ttt_cache()
     with torch.no_grad():
         _ = model(input_ids=inp["input_ids"], past_key_values=cache_b, use_cache=True)
-    pw_b = _extract_past_w(cache_b)
+    pw_b = _extract_past_w(cache_b, ttt_layer_idx)
 
     if pw_a is None or pw_b is None:
-        return False, f"could not extract past_w (cache has {len(cache_a.ttt_states) if hasattr(cache_a, 'ttt_states') else 0} ttt_states)"
+        n = len(cache_a.ttt_states) if hasattr(cache_a, "ttt_states") else 0
+        return False, f"could not extract past_w from layer {ttt_layer_idx} (cache has {n} ttt_states)"
     diff = (pw_a - pw_b).abs().mean().item()
     if diff > 1e-4:
         return False, f"past_w diverges across runs: mean abs diff = {diff:.6f}"
     return True, f"past_w reproducible: mean abs diff = {diff:.2e}"
 
 
-def check_4_fast_weight_input_dependent(model, tokenizer) -> tuple[bool, str]:
-    enable_ttt_updates(model)
-    # Two genuinely different inputs of similar length
-    text_a = long_dummy_text(tokenizer, target_tokens=1500)
-    text_b = "苹果公司发布了新一代芯片，采用台积电3纳米工艺。" * 50
+def check_4_fast_weight_input_dependent(model, tokenizer, ttt_layer_idx: int = 0) -> tuple[bool, str]:
+    text_a = long_dummy_text(tokenizer, target_tokens=200)
+    text_b = "苹果公司发布了新一代芯片，采用台积电3纳米工艺。" * 30
 
-    inp_a = tokenizer(text_a, return_tensors="pt", truncation=True, max_length=2000).to(model.device)
-    inp_b = tokenizer(text_b, return_tensors="pt", truncation=True, max_length=2000).to(model.device)
+    inp_a = tokenizer(text_a, return_tensors="pt", truncation=True, max_length=400).to(model.device)
+    inp_b = tokenizer(text_b, return_tensors="pt", truncation=True, max_length=400).to(model.device)
 
     cache_a = fresh_ttt_cache()
     cache_b = fresh_ttt_cache()
@@ -137,26 +138,24 @@ def check_4_fast_weight_input_dependent(model, tokenizer) -> tuple[bool, str]:
         _ = model(input_ids=inp_a["input_ids"], past_key_values=cache_a, use_cache=True)
         _ = model(input_ids=inp_b["input_ids"], past_key_values=cache_b, use_cache=True)
 
-    pw_a = _extract_past_w(cache_a)
-    pw_b = _extract_past_w(cache_b)
+    pw_a = _extract_past_w(cache_a, ttt_layer_idx)
+    pw_b = _extract_past_w(cache_b, ttt_layer_idx)
     if pw_a is None or pw_b is None:
         return False, "could not extract past_w"
     diff = (pw_a - pw_b).abs().mean().item()
     if diff < 1e-4:
-        return False, f"past_w identical for different inputs: {diff:.6f}"
+        return False, f"past_w identical for different inputs (diff={diff:.6f})"
     return True, f"past_w differs by input: mean abs diff = {diff:.4f}"
 
 
 def check_5_kv_strip_works(model, tokenizer) -> tuple[bool, str]:
-    text = long_dummy_text(tokenizer, target_tokens=1500)
-    enable_ttt_updates(model)
+    text = long_dummy_text(tokenizer, target_tokens=200)
     cache = fresh_ttt_cache()
     with torch.no_grad():
         inp = tokenizer(text, return_tensors="pt").to(model.device)
         _ = model(input_ids=inp["input_ids"], past_key_values=cache, use_cache=True)
 
     stripped = kv_stripped_clone(cache)
-    disable_ttt_updates(model)
 
     probe = tokenizer("会议室在哪？", return_tensors="pt").to(model.device)
     try:
@@ -177,21 +176,30 @@ def check_5_kv_strip_works(model, tokenizer) -> tuple[bool, str]:
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--checkpoint", type=Path, default=None)
-    parser.add_argument("--ttt-chunk", type=int, default=1024)
+    parser.add_argument("--ttt-chunk", type=int, default=64)
     args = parser.parse_args()
 
     print("[sanity] loading model...")
     model, tokenizer = load_ttt_qwen3(ttt_chunk=args.ttt_chunk)
-    if args.checkpoint and args.checkpoint.exists():
+    if args.checkpoint and Path(args.checkpoint).exists():
         load_ttt_params(model, args.checkpoint)
+    else:
+        print(f"[sanity] WARNING: no checkpoint at {args.checkpoint}")
+        print("[sanity] checks 1+2 will likely fail — run train_minimal.py first.")
+    trained_snapshot = snapshot_ttt_params(model)
     model.eval()
 
     checks = [
-        ("1. TTT-on vs TTT-off output diverges", lambda: check_1_ttt_changes_output(model, tokenizer)),
-        ("2. ttt_proj + ttt_conv params non-zero", lambda: check_2_ttt_params_nonzero(model)),
-        ("3. fast weight reproducible", lambda: check_3_fast_weight_reproducible(model, tokenizer)),
-        ("4. fast weight input-dependent", lambda: check_4_fast_weight_input_dependent(model, tokenizer)),
-        ("5. KV-stripped cache forward works", lambda: check_5_kv_strip_works(model, tokenizer)),
+        ("1. trained TTT vs zeroed TTT output diverges",
+         lambda: check_1_trained_vs_zero(model, tokenizer, trained_snapshot)),
+        ("2. ttt_proj + ttt_conv params non-zero (post-train)",
+         lambda: check_2_ttt_params_nonzero(model)),
+        ("3. fast weight reproducible across forward passes",
+         lambda: check_3_fast_weight_reproducible(model, tokenizer)),
+        ("4. fast weight is input-dependent",
+         lambda: check_4_fast_weight_input_dependent(model, tokenizer)),
+        ("5. KV-stripped cache forward works",
+         lambda: check_5_kv_strip_works(model, tokenizer)),
     ]
 
     n_pass = 0
@@ -199,13 +207,18 @@ def main():
         try:
             ok, detail = fn()
         except Exception as e:
+            import traceback
             ok = False
-            detail = f"{type(e).__name__}: {e}"
+            detail = f"{type(e).__name__}: {e}\n{traceback.format_exc().splitlines()[-3:]}"
         marker = "✓ PASS" if ok else "✗ FAIL"
         print(f"  [{marker}] {name}")
-        print(f"           {detail}")
+        for line in detail.splitlines():
+            print(f"           {line}")
         if ok:
             n_pass += 1
+
+    # Restore trained params before exit so the caller can continue using the model
+    restore_ttt_params(model, trained_snapshot)
 
     print(f"\n[sanity] {n_pass}/{len(checks)} checks passed")
     sys.exit(0 if n_pass == len(checks) else 1)

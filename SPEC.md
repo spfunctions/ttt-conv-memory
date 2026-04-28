@@ -158,8 +158,8 @@ Bring `ttt_proj` and `ttt_conv` out of init (especially `ttt_conv`, which is zer
 |---|---|---|---|
 | Optimizer steps | 5000 | 300–500 | Just enough to move TTT params off init |
 | Global batch size | 64 | 4 | Single GPU |
-| Max seq length | 65536 | 4096 | Match `ttt_chunk` exactly |
-| `ttt_chunk` | 4096 | **1024** | Match expected eval input length (see DECISIONS D-002) |
+| Max seq length | 65536 | 1024 | Long enough to fit ~16 chunks per training sample |
+| `ttt_chunk` | 4096 | **64** | Match measured token counts (conv 123-158, probe 40-60); see DECISIONS D-002 |
 | Learning rate | 5e-6 | 5e-6 | Unchanged |
 | Trained params | All | `ttt_proj` + `ttt_conv` only (base frozen) | Param-efficient; preserves Qwen3-8B world knowledge |
 | Data | Long-context corpus | Conversational (OpenAssistant or ShareGPT subset) | Distribution match to eval |

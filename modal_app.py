@@ -25,20 +25,16 @@ import modal
 app = modal.App("ttt-conv-memory")
 
 # ---------------------------------------------------------------------------
-# Image: nvidia/cuda 12.8 dev + Python 3.11 + pinned ML stack + In-Place TTT clone
+# Image: debian_slim Python 3.11 + torch 2.8 cu128 + transformers stack +
+#        In-Place TTT clone. NO flash-attn (we use PyTorch SDPA for ~equivalent
+#        speed without a 30-minute source compile).
 #
-# Why nvidia/cuda dev image (not debian_slim): flash-attn 2.8.3 ships a prebuilt
-# wheel for cu12/torch2.8/cp311, but pip's installer still imports torch at
-# install time and (if the wheel doesn't match) falls back to compiling from
-# source — which requires nvcc + CUDA libs. The dev image has both.
+# The upstream In-Place TTT modeling code dispatches attention via
+# `config._attn_implementation`; we default to "sdpa" in model_utils.py.
 # ---------------------------------------------------------------------------
 image = (
-    modal.Image.from_registry(
-        "nvidia/cuda:12.8.0-devel-ubuntu22.04",
-        add_python="3.11",
-    )
-    .apt_install("git", "build-essential", "ca-certificates", "curl", "ninja-build")
-    .pip_install("packaging", "wheel", "ninja")
+    modal.Image.debian_slim(python_version="3.11")
+    .apt_install("git", "build-essential", "ca-certificates", "curl")
     # Torch first (cu128 wheel)
     .pip_install(
         "torch==2.8.0",
@@ -46,8 +42,6 @@ image = (
         "torchaudio==2.8.0",
         index_url="https://download.pytorch.org/whl/cu128",
     )
-    # flash-attn needs torch present at install time
-    .pip_install("flash-attn==2.8.3", extra_options="--no-build-isolation")
     .pip_install(
         "transformers==4.57.3",
         "datasets",
@@ -64,6 +58,9 @@ image = (
         "accelerate",
         "sentencepiece",
     )
+    # VeOmni is only needed for upstream training; we don't actually use it for
+    # our train_minimal.py (which just uses HF transformers). Keeping it for
+    # parity with their import paths in case a code path touches it.
     .pip_install(
         "veomni @ git+https://github.com/ByteDance-Seed/VeOmni.git@9b91e164bea9e17f17ed490aab5e076c2335ca25"
     )
@@ -141,7 +138,7 @@ def sanity_checks(checkpoint: str | None = None):
 )
 def train_minimal(
     steps: int = 400,
-    ttt_chunk: int = 1024,
+    ttt_chunk: int = 64,
     batch_size: int = 2,
     grad_accum: int = 2,
     lr: float = 5e-6,
@@ -169,7 +166,7 @@ def train_minimal(
     volumes={"/data": vol},
     timeout=3 * 3600,
 )
-def run_one(cond: str, limit: int | None = None, ttt_chunk: int = 1024):
+def run_one(cond: str, limit: int | None = None, ttt_chunk: int = 64):
     """Run a single condition (a/b/c/d)."""
     import subprocess, os
     os.makedirs("/data/results", exist_ok=True)
@@ -243,7 +240,7 @@ def sanity():
 
 
 @app.local_entrypoint()
-def train(steps: int = 400, ttt_chunk: int = 1024):
+def train(steps: int = 400, ttt_chunk: int = 64):
     train_minimal.remote(steps=steps, ttt_chunk=ttt_chunk)
 
 
@@ -257,7 +254,7 @@ def run_condition_remote(cond: str = "all", limit: int | None = None):
 
 
 @app.local_entrypoint()
-def full_pipeline(steps: int = 400, ttt_chunk: int = 1024):
+def full_pipeline(steps: int = 400, ttt_chunk: int = 64):
     """End-to-end: train -> sanity -> conditions -> eval -> print headline."""
     print("=== train ===")
     train_minimal.remote(steps=steps, ttt_chunk=ttt_chunk)
