@@ -1,0 +1,54 @@
+{
+  "diagnostic": {
+    "sample_id": "L1-0000",
+    "conv_chars": 199,
+    "per_layer_relative_dw": {
+      "0": 0.08223484404016432,
+      "6": 0.02922916066436398,
+      "12": 0.3820759446302354,
+      "18": 0.8066607174018833,
+      "24": 1.6522400612949768,
+      "30": 3.1883552859477193
+    },
+    "mean": 1.0234660023298905,
+    "max": 3.1883552859477193
+  },
+  "scales_run": {
+    "0.01": {
+      "suffix": "0p01",
+      "out": "/data/results/condition_a_prime_0p01.json",
+      "n_samples": 30
+    },
+    "0.05": {
+      "suffix": "0p05",
+      "out": "/data/results/condition_a_prime_0p05.json",
+      "n_samples": 30
+    },
+    "0.1": {
+      "suffix": "0p1",
+      "out": "/data/results/condition_a_prime_0p1.json",
+      "n_samples": 30
+    },
+    "0.2": {
+      "suffix": "0p2",
+      "out": "/data/results/condition_a_prime_0p2.json",
+      "n_samples": 30
+    },
+    "0.5": {
+      "suffix": "0p5",
+      "out": "/data/results/condition_a_prime_0p5.json",
+      "n_samples": 30
+    },
+    "1.0235": {
+      "suffix": "1p0235",
+      "out": "/data/results/condition_a_prime_1p0235.json",
+      "n_samples": 30
+    },
+    "3.1884": {
+      "suffix": "3p1884",
+      "out": "/data/results/condition_a_prime_3p1884.json",
+      "n_samples": 30
+    }
+  },
+  "samples_per_scale": 30
+}

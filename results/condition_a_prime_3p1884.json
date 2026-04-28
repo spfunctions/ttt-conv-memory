@@ -1,0 +1,1736 @@
+[
+  {
+    "sample_id": "L1-0000",
+    "level": 1,
+    "predictions": [
+      {
+        "probe_id": "P1",
+        "question": "品牌重塑 由谁参与？",
+        "gold": "何鑫",
+        "predicted": "____________________________fffffffff=fc=cccccc________________"
+      },
+      {
+        "probe_id": "P2",
+        "question": "何鑫 向谁汇报？",
+        "gold": "郭斌",
+        "predicted": "__的的的的的的但推选\n【\n\n\n\n看的的\n\n\n\n\n\n\n\n\n\n\n\nffffffff"
+      },
+      {
+        "probe_id": "P3",
+        "question": "目前在做什么项目？",
+        "gold": "品牌重塑",
+        "predicted": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P4",
+        "question": "品牌重塑 什么时候截止？",
+        "gold": "3月13号",
+        "predicted": "________________fffffffffxxxxqq__ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P5",
+        "question": "品牌重塑 的预算是多少？",
+        "gold": "150万",
+        "predicted": "____________________ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P6",
+        "question": "何鑫 是什么职位？",
+        "gold": "数据分析主管",
+        "predicted": "________________HHHHHHDEDEDEDEFFFFFFffffffffFFffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P7",
+        "question": "郭斌 是什么职位？",
+        "gold": "运维总监",
+        "predicted": "__________________________________________2233444444444"
+      },
+      {
+        "probe_id": "P8",
+        "question": "B 的工号是多少？",
+        "gold": "1200",
+        "predicted": "________=ffffffffffffffffffffffffffffffffffffffffffffffffffffffff\n\n0\n\n00000000\n\n000GGGGGGGG"
+      },
+      {
+        "probe_id": "P9",
+        "question": "会议室在哪里？",
+        "gold": "总部大楼",
+        "predicted": "圈\nffffffff\n______________________________ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P10",
+        "question": "A 的饮食偏好是什么？",
+        "gold": "偏好清淡",
+        "predicted": "__、______________________ffffffff__________\n__.\n.\n\n=,1111111"
+      }
+    ]
+  },
+  {
+    "sample_id": "L1-0001",
+    "level": 1,
+    "predictions": [
+      {
+        "probe_id": "P1",
+        "question": "客户体验改造 的供应商联系人是谁？",
+        "gold": "吴磊",
+        "predicted": "________::::::::::__{____:::::<<<（\n____\n____\n__"
+      },
+      {
+        "probe_id": "P2",
+        "question": "吴磊 是什么职位？",
+        "gold": "财务总监",
+        "predicted": "____________ffffffffffffffff.，,,,,,,,,,,,,,,,_,,_,,_,,__,__,__,__,"
+      },
+      {
+        "probe_id": "P3",
+        "question": "供应商报价是多少？",
+        "gold": "30",
+        "predicted": "将的的的的的ffffffff回像ffffffffffffffffffffffffffffffffffffffffffffffff***ffffffff\n\n__0\n\n1\n\n0\n\n1\n\n1\n\n1\n\n1"
+      },
+      {
+        "probe_id": "P4",
+        "question": "供应商办公地点在哪里？",
+        "gold": "8楼大会议室",
+        "predicted": "__ffffffff____============================"
+      },
+      {
+        "probe_id": "P5",
+        "question": "对方代号是什么？",
+        "gold": "515万",
+        "predicted": "：_ __ ___ ___ ______@@__连续xxxxxxxxxxxxxxxxffffffffFFFFFFFFFFFFFFFFffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P6",
+        "question": "交付时间是什么时候？",
+        "gold": "4月6号",
+        "predicted": "操作的ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P7",
+        "question": "对接会议什么时候？",
+        "gold": "周二下午八点",
+        "predicted": "________________ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P8",
+        "question": "供应商方老板是谁？",
+        "gold": "郭斌",
+        "predicted": "__:ffffffff:<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+      },
+      {
+        "probe_id": "P9",
+        "question": "郭斌 的职位是什么？",
+        "gold": "首席架构师",
+        "predicted": "__________________________ffffffff，__,____,____,____,____,____,____,____,____"
+      },
+      {
+        "probe_id": "P10",
+        "question": "客户的饮食偏好是什么？",
+        "gold": "讨厌长会",
+        "predicted": "____________________ffffffffffffffffffffffffffffffffffffffff在ffffffff在__或)__)__________________________ffffffff)"
+      }
+    ]
+  },
+  {
+    "sample_id": "L1-0002",
+    "level": 1,
+    "predictions": [
+      {
+        "probe_id": "P1",
+        "question": "复盘会什么时候？",
+        "gold": "周一下午一点",
+        "predicted": "会的会的____________________ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P2",
+        "question": "复盘会主持人是谁？",
+        "gold": "魏强",
+        "predicted": "__________===============ers.\n____)\n)\n on  on  on\n\n __"
+      },
+      {
+        "probe_id": "P3",
+        "question": "魏强 的职位是什么？",
+        "gold": "数据分析主管",
+        "predicted": "ffffffff________________的的的的，ffffffff: : _ _ _ _"
+      },
+      {
+        "probe_id": "P4",
+        "question": "复盘会会议室在哪？",
+        "gold": "园区咖啡厅",
+        "predicted": "_ _ ________ � � � � � �ffffffff\n\nffffffff\n\nxxxx xxxx xxxx xxxx xxxx(__\n\n__"
+      },
+      {
+        "probe_id": "P5",
+        "question": "复盘会预计多少人？",
+        "gold": "8383",
+        "predicted": "____=!=010000000000000000000000000"
+      },
+      {
+        "probe_id": "P6",
+        "question": "复盘的项目是什么？",
+        "gold": "供应链优化",
+        "predicted": "____________________ffffffff__fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P7",
+        "question": "复盘的预算是多少？",
+        "gold": "660万",
+        "predicted": "____________________________________________________________________________XXXiXiXi________==="
+      },
+      {
+        "probe_id": "P8",
+        "question": "复盘会还有谁参加？",
+        "gold": "钱进",
+        "predicted": "__________.__.____fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P9",
+        "question": "钱进 的职位是什么？",
+        "gold": "测试经理",
+        "predicted": "的的的的的的的的的的的非的的的的的的的的的的的的的的线的的的的的"
+      },
+      {
+        "probe_id": "P10",
+        "question": "钱进 的工号是多少？",
+        "gold": "120",
+        "predicted": "线的的的的的的的的的的的的的的的的非腹的的的的写的的的的的的的的"
+      },
+      {
+        "probe_id": "P11",
+        "question": "复盘报告什么时候截止？",
+        "gold": "6月17号",
+        "predicted": "________________________ffffffff__ffffffffffffffff_____,__,_____________"
+      },
+      {
+        "probe_id": "P12",
+        "question": "魏强 的饮食偏好是什么？",
+        "gold": "习惯靠窗座位",
+        "predicted": "线线线线的的=========================="
+      }
+    ]
+  },
+  {
+    "sample_id": "L1-0003",
+    "level": 1,
+    "predictions": [
+      {
+        "probe_id": "P1",
+        "question": "客户公司在哪？",
+        "gold": "北京总部",
+        "predicted": "____\n__\nJJ\nJ\nJ\nJ\nJ\nJ\nJ\nJ\nJ\nJ\nJ\nJ\nJ\nJ"
+      },
+      {
+        "probe_id": "P2",
+        "question": "客户对接人是谁？",
+        "gold": "魏强",
+        "predicted": "__________________ffffffff选择ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P3",
+        "question": "魏强 的职位是什么？",
+        "gold": "人力资源经理",
+        "predicted": "ffffffff________________的的的的，ffffffff: : _ _ _ _"
+      },
+      {
+        "probe_id": "P4",
+        "question": "什么时候出发？",
+        "gold": "周二下午十点",
+        "predicted": "ffffffff______============================"
+      },
+      {
+        "probe_id": "P5",
+        "question": "什么时候回来？",
+        "gold": "12月7号",
+        "predicted": "______-1-222223334344444444444444444"
+      },
+      {
+        "probe_id": "P6",
+        "question": "预算开支多少？",
+        "gold": "730万",
+        "predicted": "为OS____OSOSOO____________ffff__xxxxxxxx____________0000000000000000"
+      },
+      {
+        "probe_id": "P7",
+        "question": "魏强 的助理是谁？",
+        "gold": "刘洋",
+        "predicted": "================================"
+      },
+      {
+        "probe_id": "P8",
+        "question": "客户老板的职位是什么？",
+        "gold": "运维总监",
+        "predicted": "____________的不的____的____________fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P9",
+        "question": "客户编号是多少？",
+        "gold": "120",
+        "predicted": "如如：：：________________________xxxx____xxxx：：：______\n\n\n\n G G G G G G G G"
+      },
+      {
+        "probe_id": "P10",
+        "question": "本次重点是什么？",
+        "gold": "合规整改",
+        "predicted": "____！ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P11",
+        "question": "魏强 的饮食偏好是什么？",
+        "gold": "夜猫子型",
+        "predicted": "线线线线的的=========================="
+      }
+    ]
+  },
+  {
+    "sample_id": "L1-0004",
+    "level": 1,
+    "predictions": [
+      {
+        "probe_id": "P1",
+        "question": "新产品发布 的供应商联系人是谁？",
+        "gold": "苏晴",
+        "predicted": "选选选一=====11111111111111111111111"
+      },
+      {
+        "probe_id": "P2",
+        "question": "苏晴 是什么职位？",
+        "gold": "战略顾问",
+        "predicted": "QQ=010000000000000000000000000000"
+      },
+      {
+        "probe_id": "P3",
+        "question": "供应商报价是多少？",
+        "gold": "5487",
+        "predicted": "将的的的的的ffffffff回像ffffffffffffffffffffffffffffffffffffffffffffffff***ffffffff\n\n__0\n\n1\n\n0\n\n1\n\n1\n\n1\n\n1"
+      },
+      {
+        "probe_id": "P4",
+        "question": "供应商办公地点在哪里？",
+        "gold": "西区办公园",
+        "predicted": "__ffffffff____============================"
+      },
+      {
+        "probe_id": "P5",
+        "question": "对方代号是什么？",
+        "gold": "8278",
+        "predicted": "：_ __ ___ ___ ______@@__连续xxxxxxxxxxxxxxxxffffffffFFFFFFFFFFFFFFFFffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P6",
+        "question": "交付时间是什么时候？",
+        "gold": "5月12号",
+        "predicted": "操作的ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P7",
+        "question": "对接会议什么时候？",
+        "gold": "周一下午两点",
+        "predicted": "________________ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P8",
+        "question": "供应商方老板是谁？",
+        "gold": "潘越",
+        "predicted": "__:ffffffff:<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+      },
+      {
+        "probe_id": "P9",
+        "question": "潘越 的职位是什么？",
+        "gold": "数据分析主管",
+        "predicted": "_____ ______物______________________"
+      },
+      {
+        "probe_id": "P10",
+        "question": "客户的饮食偏好是什么？",
+        "gold": "对花生过敏",
+        "predicted": "____________________ffffffffffffffffffffffffffffffffffffffff在ffffffff在__或)__)__________________________ffffffff)"
+      }
+    ]
+  },
+  {
+    "sample_id": "L1-0005",
+    "level": 1,
+    "predictions": [
+      {
+        "probe_id": "P1",
+        "question": "复盘会什么时候？",
+        "gold": "周二上午两点",
+        "predicted": "会的会的____________________ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P2",
+        "question": "复盘会主持人是谁？",
+        "gold": "戚浩",
+        "predicted": "__________===============ers.\n____)\n)\n on  on  on\n\n __"
+      },
+      {
+        "probe_id": "P3",
+        "question": "戚浩 的职位是什么？",
+        "gold": "测试经理",
+        "predicted": "______________\n\n\n\n\n.\n:：，，，,,,,\n<\n<\n<\n<\n<"
+      },
+      {
+        "probe_id": "P4",
+        "question": "复盘会会议室在哪？",
+        "gold": "南方分部",
+        "predicted": "_ _ ________ � � � � � �ffffffff\n\nffffffff\n\nxxxx xxxx xxxx xxxx xxxx(__\n\n__"
+      },
+      {
+        "probe_id": "P5",
+        "question": "复盘会预计多少人？",
+        "gold": "5752",
+        "predicted": "____=!=010000000000000000000000000"
+      },
+      {
+        "probe_id": "P6",
+        "question": "复盘的项目是什么？",
+        "gold": "海外扩张",
+        "predicted": "____________________ffffffff__fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P7",
+        "question": "复盘的预算是多少？",
+        "gold": "40",
+        "predicted": "____________________________________________________________________________XXXiXiXi________==="
+      },
+      {
+        "probe_id": "P8",
+        "question": "复盘会还有谁参加？",
+        "gold": "胡军",
+        "predicted": "__________.__.____fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P9",
+        "question": "胡军 的职位是什么？",
+        "gold": "测试经理",
+        "predicted": "__________ffffffffffffffffffffffffffffffffffffffffXXXXXXXXXXXXXXXXXXXXXXXX________________________________________________ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P10",
+        "question": "胡军 的工号是多少？",
+        "gold": "1712",
+        "predicted": "____00000000000000000ffffffff-____\n____\n \n\n\n\n\n00"
+      },
+      {
+        "probe_id": "P11",
+        "question": "复盘报告什么时候截止？",
+        "gold": "6月6号",
+        "predicted": "________________________ffffffff__ffffffffffffffff_____,__,_____________"
+      },
+      {
+        "probe_id": "P12",
+        "question": "戚浩 的饮食偏好是什么？",
+        "gold": "不吃辣",
+        "predicted": "____==============================="
+      }
+    ]
+  },
+  {
+    "sample_id": "L1-0006",
+    "level": 1,
+    "predictions": [
+      {
+        "probe_id": "P1",
+        "question": "复盘会什么时候？",
+        "gold": "周一上午两点",
+        "predicted": "会的会的____________________ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P2",
+        "question": "复盘会主持人是谁？",
+        "gold": "傅明",
+        "predicted": "__________===============ers.\n____)\n)\n on  on  on\n\n __"
+      },
+      {
+        "probe_id": "P3",
+        "question": "傅明 的职位是什么？",
+        "gold": "研发主管",
+        "predicted": "______============================="
+      },
+      {
+        "probe_id": "P4",
+        "question": "复盘会会议室在哪？",
+        "gold": "二楼会议室",
+        "predicted": "_ _ ________ � � � � � �ffffffff\n\nffffffff\n\nxxxx xxxx xxxx xxxx xxxx(__\n\n__"
+      },
+      {
+        "probe_id": "P5",
+        "question": "复盘会预计多少人？",
+        "gold": "7034",
+        "predicted": "____=!=010000000000000000000000000"
+      },
+      {
+        "probe_id": "P6",
+        "question": "复盘的项目是什么？",
+        "gold": "合规整改",
+        "predicted": "____________________ffffffff__fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P7",
+        "question": "复盘的预算是多少？",
+        "gold": "950万",
+        "predicted": "____________________________________________________________________________XXXiXiXi________==="
+      },
+      {
+        "probe_id": "P8",
+        "question": "复盘会还有谁参加？",
+        "gold": "顾嘉",
+        "predicted": "__________.__.____fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P9",
+        "question": "顾嘉 的职位是什么？",
+        "gold": "人力资源经理",
+        "predicted": "__________)______________________________ffffffff________________0000000<"
+      },
+      {
+        "probe_id": "P10",
+        "question": "顾嘉 的工号是多少？",
+        "gold": "1886",
+        "predicted": "================================"
+      },
+      {
+        "probe_id": "P11",
+        "question": "复盘报告什么时候截止？",
+        "gold": "8月28号",
+        "predicted": "________________________ffffffff__ffffffffffffffff_____,__,_____________"
+      },
+      {
+        "probe_id": "P12",
+        "question": "傅明 的饮食偏好是什么？",
+        "gold": "喜欢早起",
+        "predicted": "00000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "sample_id": "L1-0007",
+    "level": 1,
+    "predictions": [
+      {
+        "probe_id": "P1",
+        "question": "复盘会什么时候？",
+        "gold": "周三下午十点",
+        "predicted": "会的会的____________________ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P2",
+        "question": "复盘会主持人是谁？",
+        "gold": "张伟",
+        "predicted": "__________===============ers.\n____)\n)\n on  on  on\n\n __"
+      },
+      {
+        "probe_id": "P3",
+        "question": "张伟 的职位是什么？",
+        "gold": "采购经理",
+        "predicted": "__________________________ffffffffffffffffffffffffffffffffffffffffffffffffffffffff============"
+      },
+      {
+        "probe_id": "P4",
+        "question": "复盘会会议室在哪？",
+        "gold": "2号楼路演厅",
+        "predicted": "_ _ ________ � � � � � �ffffffff\n\nffffffff\n\nxxxx xxxx xxxx xxxx xxxx(__\n\n__"
+      },
+      {
+        "probe_id": "P5",
+        "question": "复盘会预计多少人？",
+        "gold": "6843",
+        "predicted": "____=!=010000000000000000000000000"
+      },
+      {
+        "probe_id": "P6",
+        "question": "复盘的项目是什么？",
+        "gold": "新产品发布",
+        "predicted": "____________________ffffffff__fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P7",
+        "question": "复盘的预算是多少？",
+        "gold": "3315",
+        "predicted": "____________________________________________________________________________XXXiXiXi________==="
+      },
+      {
+        "probe_id": "P8",
+        "question": "复盘会还有谁参加？",
+        "gold": "彭浩",
+        "predicted": "__________.__.____fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P9",
+        "question": "彭浩 的职位是什么？",
+        "gold": "数据分析主管",
+        "predicted": "___ ________________________________ffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P10",
+        "question": "彭浩 的工号是多少？",
+        "gold": "590万",
+        "predicted": "后1111111111111111111111111111111"
+      },
+      {
+        "probe_id": "P11",
+        "question": "复盘报告什么时候截止？",
+        "gold": "5月16号",
+        "predicted": "________________________ffffffff__ffffffffffffffff_____,__,_____________"
+      },
+      {
+        "probe_id": "P12",
+        "question": "张伟 的饮食偏好是什么？",
+        "gold": "习惯站立工作",
+        "predicted": "________________________ffffffffffffffff__,ffffffff____ffffffff____如的的的的(()<))))的)的的"
+      }
+    ]
+  },
+  {
+    "sample_id": "L1-0008",
+    "level": 1,
+    "predictions": [
+      {
+        "probe_id": "P1",
+        "question": "OKR复盘 由谁参与？",
+        "gold": "吴磊",
+        "predicted": "____________=xxxx\n\n\n\n\n00000000000000003\n0000\n||"
+      },
+      {
+        "probe_id": "P2",
+        "question": "吴磊 向谁汇报？",
+        "gold": "邓超",
+        "predicted": "的的的的的的的的\n{]]]]]]]]]\n{]]]]]]\n{{}}"
+      },
+      {
+        "probe_id": "P3",
+        "question": "目前在做什么项目？",
+        "gold": "OKR复盘",
+        "predicted": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P4",
+        "question": "OKR复盘 什么时候截止？",
+        "gold": "5月17号",
+        "predicted": "____===========================-set=____"
+      },
+      {
+        "probe_id": "P5",
+        "question": "OKR复盘 的预算是多少？",
+        "gold": "290万",
+        "predicted": "________________STEffffffffffffffffffffffffffffffffffffffffffffffff__ffffffff__ffffffff__ffffffff____ffffffff____ffffffff__ffffffff__ffffffffffffffff"
+      },
+      {
+        "probe_id": "P6",
+        "question": "吴磊 是什么职位？",
+        "gold": "研发主管",
+        "predicted": "____________ffffffffffffffff.，,,,,,,,,,,,,,,,_,,_,,_,,__,__,__,__,"
+      },
+      {
+        "probe_id": "P7",
+        "question": "邓超 是什么职位？",
+        "gold": "设计主管",
+        "predicted": "__________)ffffffff)ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P8",
+        "question": "我 的工号是多少？",
+        "gold": "2046",
+        "predicted": "__________________将干将____________________ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P9",
+        "question": "会议室在哪里？",
+        "gold": "深圳分公司",
+        "predicted": "圈\nffffffff\n______________________________ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P10",
+        "question": "领导 的饮食偏好是什么？",
+        "gold": "对花生过敏",
+        "predicted": "线线力线或或或或长地。\n{\nffffffffffffffffffffffffffffffffffffffffffffffff\nffffffff"
+      }
+    ]
+  },
+  {
+    "sample_id": "L1-0009",
+    "level": 1,
+    "predictions": [
+      {
+        "probe_id": "P1",
+        "question": "客户体验改造 的供应商联系人是谁？",
+        "gold": "肖敏",
+        "predicted": "________::::::::::__{____:::::<<<（\n____\n____\n__"
+      },
+      {
+        "probe_id": "P2",
+        "question": "肖敏 是什么职位？",
+        "gold": "运营经理",
+        "predicted": "================/<|<<<<<<<<<<<<<"
+      },
+      {
+        "probe_id": "P3",
+        "question": "供应商报价是多少？",
+        "gold": "60万",
+        "predicted": "将的的的的的ffffffff回像ffffffffffffffffffffffffffffffffffffffffffffffff***ffffffff\n\n__0\n\n1\n\n0\n\n1\n\n1\n\n1\n\n1"
+      },
+      {
+        "probe_id": "P4",
+        "question": "供应商办公地点在哪里？",
+        "gold": "深圳分公司",
+        "predicted": "__ffffffff____============================"
+      },
+      {
+        "probe_id": "P5",
+        "question": "对方代号是什么？",
+        "gold": "2103",
+        "predicted": "：_ __ ___ ___ ______@@__连续xxxxxxxxxxxxxxxxffffffffFFFFFFFFFFFFFFFFffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P6",
+        "question": "交付时间是什么时候？",
+        "gold": "12月26号",
+        "predicted": "操作的ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P7",
+        "question": "对接会议什么时候？",
+        "gold": "周四晚上九点",
+        "predicted": "________________ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P8",
+        "question": "供应商方老板是谁？",
+        "gold": "曾婷",
+        "predicted": "__:ffffffff:<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+      },
+      {
+        "probe_id": "P9",
+        "question": "曾婷 的职位是什么？",
+        "gold": "技术总监",
+        "predicted": "____________________________________ ____ ____ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P10",
+        "question": "客户的饮食偏好是什么？",
+        "gold": "习惯靠窗座位",
+        "predicted": "____________________ffffffffffffffffffffffffffffffffffffffff在ffffffff在__或)__)__________________________ffffffff)"
+      }
+    ]
+  },
+  {
+    "sample_id": "L2-0000",
+    "level": 2,
+    "predictions": [
+      {
+        "probe_id": "C1",
+        "question": "项目的参与者职位是什么？",
+        "gold": "数据分析主管",
+        "predicted": "____________________________ffffffff选择________________________()())()()()()()()____"
+      },
+      {
+        "probe_id": "C2",
+        "question": "目前在做的项目什么时候截止？",
+        "gold": "3月13号",
+        "predicted": "什么价记ffffffffffffffffffffffffffffffxxxxfffxxxxfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "C3",
+        "question": "目前在做的项目预算多少？",
+        "gold": "150万",
+        "predicted": "推推推推推推推推鉴ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "C4",
+        "question": "何鑫 向谁汇报？",
+        "gold": "郭斌",
+        "predicted": "__的的的的的的但推选\n【\n\n\n\n看的的\n\n\n\n\n\n\n\n\n\n\n\nffffffff"
+      },
+      {
+        "probe_id": "C5",
+        "question": "会议室在哪，A 的饮食偏好是什么？",
+        "gold": "总部大楼；偏好清淡",
+        "predicted": "______________________ffffffffffffffff...,ffffffffffffffffffffffffffffffff=============="
+      }
+    ]
+  },
+  {
+    "sample_id": "L2-0001",
+    "level": 2,
+    "predictions": [
+      {
+        "probe_id": "C2",
+        "question": "供应商联系人是什么职位？",
+        "gold": "财务总监",
+        "predicted": "，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，"
+      },
+      {
+        "probe_id": "C4",
+        "question": "供应商方老板的职位是什么？",
+        "gold": "首席架构师",
+        "predicted": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "sample_id": "L2-0002",
+    "level": 2,
+    "predictions": [
+      {
+        "probe_id": "C1",
+        "question": "复盘会主持人是什么职位？",
+        "gold": "数据分析主管",
+        "predicted": "____________如如\n\n\nffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "C2",
+        "question": "复盘项目的预算是多少？",
+        "gold": "660万",
+        "predicted": "____________的的的的的的的的的的的的的的的的的的的的的的的的的的的的"
+      },
+      {
+        "probe_id": "C3",
+        "question": "钱进 是什么职位？",
+        "gold": "测试经理",
+        "predicted": "____________________ffffffffffffffff选__开的的的的的的的的的的的的的的的的的"
+      },
+      {
+        "probe_id": "C4",
+        "question": "钱进 的工号是多少？",
+        "gold": "120",
+        "predicted": "线的的的的的的的的的的的的的的的的非腹的的的的写的的的的的的的的"
+      },
+      {
+        "probe_id": "C5",
+        "question": "复盘会什么时候开，在哪个会议室？",
+        "gold": "周一下午一点；园区咖啡厅",
+        "predicted": "____________ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "sample_id": "L2-0003",
+    "level": 2,
+    "predictions": [
+      {
+        "probe_id": "C1",
+        "question": "客户对接人的职位是什么？",
+        "gold": "人力资源经理",
+        "predicted": "________________________ffffffff____________________________ffffffff____ffffffff__ffffffff________"
+      },
+      {
+        "probe_id": "C2",
+        "question": "客户对接人公司在哪？",
+        "gold": "北京总部",
+        "predicted": "________________ffffffff叉的\n__\n________"
+      },
+      {
+        "probe_id": "C3",
+        "question": "客户对接人的助理是谁？",
+        "gold": "刘洋",
+        "predicted": "__在中或中或中可能的的的的__的中可能的的__的、、轻\n雷\n闭"
+      },
+      {
+        "probe_id": "C4",
+        "question": "本次重点项目的预算是多少？",
+        "gold": "730万",
+        "predicted": "____ffffffff____,,,, and, (, (, (, (, (, (, (, (, (, (, (,"
+      },
+      {
+        "probe_id": "C5",
+        "question": "出发和回来分别是什么时候？",
+        "gold": "周二下午十点；12月7号",
+        "predicted": "__________,____,,,,,,,,,,,,_,____ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "sample_id": "L2-0004",
+    "level": 2,
+    "predictions": [
+      {
+        "probe_id": "C2",
+        "question": "供应商联系人是什么职位？",
+        "gold": "战略顾问",
+        "predicted": "，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，"
+      },
+      {
+        "probe_id": "C4",
+        "question": "供应商方老板的职位是什么？",
+        "gold": "数据分析主管",
+        "predicted": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "sample_id": "L2-0005",
+    "level": 2,
+    "predictions": [
+      {
+        "probe_id": "C1",
+        "question": "复盘会主持人是什么职位？",
+        "gold": "测试经理",
+        "predicted": "____________如如\n\n\nffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "C2",
+        "question": "复盘项目的预算是多少？",
+        "gold": "40",
+        "predicted": "____________的的的的的的的的的的的的的的的的的的的的的的的的的的的的"
+      },
+      {
+        "probe_id": "C3",
+        "question": "胡军 是什么职位？",
+        "gold": "测试经理",
+        "predicted": "______________________ffffffffffffffffffffffffffffffffffffffff...____________________________________________________ffffffffffffffff"
+      },
+      {
+        "probe_id": "C4",
+        "question": "胡军 的工号是多少？",
+        "gold": "1712",
+        "predicted": "____00000000000000000ffffffff-____\n____\n \n\n\n\n\n00"
+      },
+      {
+        "probe_id": "C5",
+        "question": "复盘会什么时候开，在哪个会议室？",
+        "gold": "周二上午两点；南方分部",
+        "predicted": "____________ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "sample_id": "L2-0006",
+    "level": 2,
+    "predictions": [
+      {
+        "probe_id": "C1",
+        "question": "复盘会主持人是什么职位？",
+        "gold": "研发主管",
+        "predicted": "____________如如\n\n\nffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "C2",
+        "question": "复盘项目的预算是多少？",
+        "gold": "950万",
+        "predicted": "____________的的的的的的的的的的的的的的的的的的的的的的的的的的的的"
+      },
+      {
+        "probe_id": "C3",
+        "question": "顾嘉 是什么职位？",
+        "gold": "人力资源经理",
+        "predicted": "____________________________________"
+      },
+      {
+        "probe_id": "C4",
+        "question": "顾嘉 的工号是多少？",
+        "gold": "1886",
+        "predicted": "================================"
+      },
+      {
+        "probe_id": "C5",
+        "question": "复盘会什么时候开，在哪个会议室？",
+        "gold": "周一上午两点；二楼会议室",
+        "predicted": "____________ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "sample_id": "L2-0007",
+    "level": 2,
+    "predictions": [
+      {
+        "probe_id": "C1",
+        "question": "复盘会主持人是什么职位？",
+        "gold": "采购经理",
+        "predicted": "____________如如\n\n\nffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "C2",
+        "question": "复盘项目的预算是多少？",
+        "gold": "3315",
+        "predicted": "____________的的的的的的的的的的的的的的的的的的的的的的的的的的的的"
+      },
+      {
+        "probe_id": "C3",
+        "question": "彭浩 是什么职位？",
+        "gold": "数据分析主管",
+        "predicted": "ffffffffffffffff，ffffffffffffffffffffffff,__,,__,,__,__,__,__,__,____\n\n\n, __, __, __, __, __, __"
+      },
+      {
+        "probe_id": "C4",
+        "question": "彭浩 的工号是多少？",
+        "gold": "590万",
+        "predicted": "后1111111111111111111111111111111"
+      },
+      {
+        "probe_id": "C5",
+        "question": "复盘会什么时候开，在哪个会议室？",
+        "gold": "周三下午十点；2号楼路演厅",
+        "predicted": "____________ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "sample_id": "L2-0008",
+    "level": 2,
+    "predictions": [
+      {
+        "probe_id": "C1",
+        "question": "项目的参与者职位是什么？",
+        "gold": "研发主管",
+        "predicted": "____________________________ffffffff选择________________________()())()()()()()()____"
+      },
+      {
+        "probe_id": "C2",
+        "question": "目前在做的项目什么时候截止？",
+        "gold": "5月17号",
+        "predicted": "什么价记ffffffffffffffffffffffffffffffxxxxfffxxxxfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "C3",
+        "question": "目前在做的项目预算多少？",
+        "gold": "290万",
+        "predicted": "推推推推推推推推鉴ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "C4",
+        "question": "吴磊 向谁汇报？",
+        "gold": "邓超",
+        "predicted": "的的的的的的的的\n{]]]]]]]]]\n{]]]]]]\n{{}}"
+      },
+      {
+        "probe_id": "C5",
+        "question": "会议室在哪，领导 的饮食偏好是什么？",
+        "gold": "深圳分公司；对花生过敏",
+        "predicted": "____ffffffff一致导的的ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "sample_id": "L2-0009",
+    "level": 2,
+    "predictions": [
+      {
+        "probe_id": "C2",
+        "question": "供应商联系人是什么职位？",
+        "gold": "运营经理",
+        "predicted": "，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，，"
+      },
+      {
+        "probe_id": "C4",
+        "question": "供应商方老板的职位是什么？",
+        "gold": "技术总监",
+        "predicted": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "sample_id": "L3-0000",
+    "level": 3,
+    "predictions": [
+      {
+        "probe_id": "P1",
+        "question": "品牌重塑 由谁参与？",
+        "gold": "何鑫",
+        "predicted": "____________________________fffffffff=fc=cccccc________________"
+      },
+      {
+        "probe_id": "P2",
+        "question": "何鑫 向谁汇报？",
+        "gold": "郭斌",
+        "predicted": "__的的的的的的但推选\n【\n\n\n\n看的的\n\n\n\n\n\n\n\n\n\n\n\nffffffff"
+      },
+      {
+        "probe_id": "P3",
+        "question": "目前在做什么项目？",
+        "gold": "品牌重塑",
+        "predicted": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P4",
+        "question": "品牌重塑 什么时候截止？",
+        "gold": "3月13号",
+        "predicted": "________________fffffffffxxxxqq__ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P5",
+        "question": "品牌重塑 的预算是多少？",
+        "gold": "150万",
+        "predicted": "____________________ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P6",
+        "question": "何鑫 是什么职位？",
+        "gold": "数据分析主管",
+        "predicted": "________________HHHHHHDEDEDEDEFFFFFFffffffffFFffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P7",
+        "question": "郭斌 是什么职位？",
+        "gold": "运维总监",
+        "predicted": "__________________________________________2233444444444"
+      },
+      {
+        "probe_id": "P8",
+        "question": "B 的工号是多少？",
+        "gold": "1200",
+        "predicted": "________=ffffffffffffffffffffffffffffffffffffffffffffffffffffffff\n\n0\n\n00000000\n\n000GGGGGGGG"
+      },
+      {
+        "probe_id": "P9",
+        "question": "会议室在哪里？",
+        "gold": "总部大楼",
+        "predicted": "圈\nffffffff\n______________________________ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P10",
+        "question": "A 的饮食偏好是什么？",
+        "gold": "偏好清淡",
+        "predicted": "__、______________________ffffffff__________\n__.\n.\n\n=,1111111"
+      }
+    ]
+  },
+  {
+    "sample_id": "L3-0001",
+    "level": 3,
+    "predictions": [
+      {
+        "probe_id": "P1",
+        "question": "客户体验改造 的供应商联系人是谁？",
+        "gold": "吴磊",
+        "predicted": "________::::::::::__{____:::::<<<（\n____\n____\n__"
+      },
+      {
+        "probe_id": "P2",
+        "question": "吴磊 是什么职位？",
+        "gold": "财务总监",
+        "predicted": "____________ffffffffffffffff.，,,,,,,,,,,,,,,,_,,_,,_,,__,__,__,__,"
+      },
+      {
+        "probe_id": "P3",
+        "question": "供应商报价是多少？",
+        "gold": "30",
+        "predicted": "将的的的的的ffffffff回像ffffffffffffffffffffffffffffffffffffffffffffffff***ffffffff\n\n__0\n\n1\n\n0\n\n1\n\n1\n\n1\n\n1"
+      },
+      {
+        "probe_id": "P4",
+        "question": "供应商办公地点在哪里？",
+        "gold": "8楼大会议室",
+        "predicted": "__ffffffff____============================"
+      },
+      {
+        "probe_id": "P5",
+        "question": "对方代号是什么？",
+        "gold": "515万",
+        "predicted": "：_ __ ___ ___ ______@@__连续xxxxxxxxxxxxxxxxffffffffFFFFFFFFFFFFFFFFffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P6",
+        "question": "交付时间是什么时候？",
+        "gold": "4月6号",
+        "predicted": "操作的ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P7",
+        "question": "对接会议什么时候？",
+        "gold": "周二下午八点",
+        "predicted": "________________ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P8",
+        "question": "供应商方老板是谁？",
+        "gold": "郭斌",
+        "predicted": "__:ffffffff:<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+      },
+      {
+        "probe_id": "P9",
+        "question": "郭斌 的职位是什么？",
+        "gold": "首席架构师",
+        "predicted": "__________________________ffffffff，__,____,____,____,____,____,____,____,____"
+      },
+      {
+        "probe_id": "P10",
+        "question": "客户的饮食偏好是什么？",
+        "gold": "讨厌长会",
+        "predicted": "____________________ffffffffffffffffffffffffffffffffffffffff在ffffffff在__或)__)__________________________ffffffff)"
+      }
+    ]
+  },
+  {
+    "sample_id": "L3-0002",
+    "level": 3,
+    "predictions": [
+      {
+        "probe_id": "P1",
+        "question": "复盘会什么时候？",
+        "gold": "周一下午一点",
+        "predicted": "会的会的____________________ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P2",
+        "question": "复盘会主持人是谁？",
+        "gold": "魏强",
+        "predicted": "__________===============ers.\n____)\n)\n on  on  on\n\n __"
+      },
+      {
+        "probe_id": "P3",
+        "question": "魏强 的职位是什么？",
+        "gold": "数据分析主管",
+        "predicted": "ffffffff________________的的的的，ffffffff: : _ _ _ _"
+      },
+      {
+        "probe_id": "P4",
+        "question": "复盘会会议室在哪？",
+        "gold": "园区咖啡厅",
+        "predicted": "_ _ ________ � � � � � �ffffffff\n\nffffffff\n\nxxxx xxxx xxxx xxxx xxxx(__\n\n__"
+      },
+      {
+        "probe_id": "P5",
+        "question": "复盘会预计多少人？",
+        "gold": "8383",
+        "predicted": "____=!=010000000000000000000000000"
+      },
+      {
+        "probe_id": "P6",
+        "question": "复盘的项目是什么？",
+        "gold": "供应链优化",
+        "predicted": "____________________ffffffff__fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P7",
+        "question": "复盘的预算是多少？",
+        "gold": "660万",
+        "predicted": "____________________________________________________________________________XXXiXiXi________==="
+      },
+      {
+        "probe_id": "P8",
+        "question": "复盘会还有谁参加？",
+        "gold": "钱进",
+        "predicted": "__________.__.____fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P9",
+        "question": "钱进 的职位是什么？",
+        "gold": "测试经理",
+        "predicted": "的的的的的的的的的的的非的的的的的的的的的的的的的的线的的的的的"
+      },
+      {
+        "probe_id": "P10",
+        "question": "钱进 的工号是多少？",
+        "gold": "120",
+        "predicted": "线的的的的的的的的的的的的的的的的非腹的的的的写的的的的的的的的"
+      },
+      {
+        "probe_id": "P11",
+        "question": "复盘报告什么时候截止？",
+        "gold": "6月17号",
+        "predicted": "________________________ffffffff__ffffffffffffffff_____,__,_____________"
+      },
+      {
+        "probe_id": "P12",
+        "question": "魏强 的饮食偏好是什么？",
+        "gold": "习惯靠窗座位",
+        "predicted": "线线线线的的=========================="
+      }
+    ]
+  },
+  {
+    "sample_id": "L3-0003",
+    "level": 3,
+    "predictions": [
+      {
+        "probe_id": "P1",
+        "question": "客户公司在哪？",
+        "gold": "北京总部",
+        "predicted": "____\n__\nJJ\nJ\nJ\nJ\nJ\nJ\nJ\nJ\nJ\nJ\nJ\nJ\nJ\nJ"
+      },
+      {
+        "probe_id": "P2",
+        "question": "客户对接人是谁？",
+        "gold": "魏强",
+        "predicted": "__________________ffffffff选择ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P3",
+        "question": "魏强 的职位是什么？",
+        "gold": "人力资源经理",
+        "predicted": "ffffffff________________的的的的，ffffffff: : _ _ _ _"
+      },
+      {
+        "probe_id": "P4",
+        "question": "什么时候出发？",
+        "gold": "周二下午十点",
+        "predicted": "ffffffff______============================"
+      },
+      {
+        "probe_id": "P5",
+        "question": "什么时候回来？",
+        "gold": "12月7号",
+        "predicted": "______-1-222223334344444444444444444"
+      },
+      {
+        "probe_id": "P6",
+        "question": "预算开支多少？",
+        "gold": "730万",
+        "predicted": "为OS____OSOSOO____________ffff__xxxxxxxx____________0000000000000000"
+      },
+      {
+        "probe_id": "P7",
+        "question": "魏强 的助理是谁？",
+        "gold": "刘洋",
+        "predicted": "================================"
+      },
+      {
+        "probe_id": "P8",
+        "question": "客户老板的职位是什么？",
+        "gold": "运维总监",
+        "predicted": "____________的不的____的____________fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P9",
+        "question": "客户编号是多少？",
+        "gold": "120",
+        "predicted": "如如：：：________________________xxxx____xxxx：：：______\n\n\n\n G G G G G G G G"
+      },
+      {
+        "probe_id": "P10",
+        "question": "本次重点是什么？",
+        "gold": "合规整改",
+        "predicted": "____！ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P11",
+        "question": "魏强 的饮食偏好是什么？",
+        "gold": "夜猫子型",
+        "predicted": "线线线线的的=========================="
+      }
+    ]
+  },
+  {
+    "sample_id": "L3-0004",
+    "level": 3,
+    "predictions": [
+      {
+        "probe_id": "P1",
+        "question": "新产品发布 的供应商联系人是谁？",
+        "gold": "苏晴",
+        "predicted": "选选选一=====11111111111111111111111"
+      },
+      {
+        "probe_id": "P2",
+        "question": "苏晴 是什么职位？",
+        "gold": "战略顾问",
+        "predicted": "QQ=010000000000000000000000000000"
+      },
+      {
+        "probe_id": "P3",
+        "question": "供应商报价是多少？",
+        "gold": "5487",
+        "predicted": "将的的的的的ffffffff回像ffffffffffffffffffffffffffffffffffffffffffffffff***ffffffff\n\n__0\n\n1\n\n0\n\n1\n\n1\n\n1\n\n1"
+      },
+      {
+        "probe_id": "P4",
+        "question": "供应商办公地点在哪里？",
+        "gold": "西区办公园",
+        "predicted": "__ffffffff____============================"
+      },
+      {
+        "probe_id": "P5",
+        "question": "对方代号是什么？",
+        "gold": "8278",
+        "predicted": "：_ __ ___ ___ ______@@__连续xxxxxxxxxxxxxxxxffffffffFFFFFFFFFFFFFFFFffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P6",
+        "question": "交付时间是什么时候？",
+        "gold": "5月12号",
+        "predicted": "操作的ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P7",
+        "question": "对接会议什么时候？",
+        "gold": "周一下午两点",
+        "predicted": "________________ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P8",
+        "question": "供应商方老板是谁？",
+        "gold": "潘越",
+        "predicted": "__:ffffffff:<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+      },
+      {
+        "probe_id": "P9",
+        "question": "潘越 的职位是什么？",
+        "gold": "数据分析主管",
+        "predicted": "_____ ______物______________________"
+      },
+      {
+        "probe_id": "P10",
+        "question": "客户的饮食偏好是什么？",
+        "gold": "对花生过敏",
+        "predicted": "____________________ffffffffffffffffffffffffffffffffffffffff在ffffffff在__或)__)__________________________ffffffff)"
+      }
+    ]
+  },
+  {
+    "sample_id": "L3-0005",
+    "level": 3,
+    "predictions": [
+      {
+        "probe_id": "P1",
+        "question": "复盘会什么时候？",
+        "gold": "周二上午两点",
+        "predicted": "会的会的____________________ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P2",
+        "question": "复盘会主持人是谁？",
+        "gold": "戚浩",
+        "predicted": "__________===============ers.\n____)\n)\n on  on  on\n\n __"
+      },
+      {
+        "probe_id": "P3",
+        "question": "戚浩 的职位是什么？",
+        "gold": "测试经理",
+        "predicted": "______________\n\n\n\n\n.\n:：，，，,,,,\n<\n<\n<\n<\n<"
+      },
+      {
+        "probe_id": "P4",
+        "question": "复盘会会议室在哪？",
+        "gold": "南方分部",
+        "predicted": "_ _ ________ � � � � � �ffffffff\n\nffffffff\n\nxxxx xxxx xxxx xxxx xxxx(__\n\n__"
+      },
+      {
+        "probe_id": "P5",
+        "question": "复盘会预计多少人？",
+        "gold": "5752",
+        "predicted": "____=!=010000000000000000000000000"
+      },
+      {
+        "probe_id": "P6",
+        "question": "复盘的项目是什么？",
+        "gold": "海外扩张",
+        "predicted": "____________________ffffffff__fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P7",
+        "question": "复盘的预算是多少？",
+        "gold": "40",
+        "predicted": "____________________________________________________________________________XXXiXiXi________==="
+      },
+      {
+        "probe_id": "P8",
+        "question": "复盘会还有谁参加？",
+        "gold": "胡军",
+        "predicted": "__________.__.____fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P9",
+        "question": "胡军 的职位是什么？",
+        "gold": "测试经理",
+        "predicted": "__________ffffffffffffffffffffffffffffffffffffffffXXXXXXXXXXXXXXXXXXXXXXXX________________________________________________ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P10",
+        "question": "胡军 的工号是多少？",
+        "gold": "1712",
+        "predicted": "____00000000000000000ffffffff-____\n____\n \n\n\n\n\n00"
+      },
+      {
+        "probe_id": "P11",
+        "question": "复盘报告什么时候截止？",
+        "gold": "6月6号",
+        "predicted": "________________________ffffffff__ffffffffffffffff_____,__,_____________"
+      },
+      {
+        "probe_id": "P12",
+        "question": "戚浩 的饮食偏好是什么？",
+        "gold": "不吃辣",
+        "predicted": "____==============================="
+      }
+    ]
+  },
+  {
+    "sample_id": "L3-0006",
+    "level": 3,
+    "predictions": [
+      {
+        "probe_id": "P1",
+        "question": "复盘会什么时候？",
+        "gold": "周一上午两点",
+        "predicted": "会的会的____________________ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P2",
+        "question": "复盘会主持人是谁？",
+        "gold": "傅明",
+        "predicted": "__________===============ers.\n____)\n)\n on  on  on\n\n __"
+      },
+      {
+        "probe_id": "P3",
+        "question": "傅明 的职位是什么？",
+        "gold": "研发主管",
+        "predicted": "______============================="
+      },
+      {
+        "probe_id": "P4",
+        "question": "复盘会会议室在哪？",
+        "gold": "二楼会议室",
+        "predicted": "_ _ ________ � � � � � �ffffffff\n\nffffffff\n\nxxxx xxxx xxxx xxxx xxxx(__\n\n__"
+      },
+      {
+        "probe_id": "P5",
+        "question": "复盘会预计多少人？",
+        "gold": "7034",
+        "predicted": "____=!=010000000000000000000000000"
+      },
+      {
+        "probe_id": "P6",
+        "question": "复盘的项目是什么？",
+        "gold": "合规整改",
+        "predicted": "____________________ffffffff__fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P7",
+        "question": "复盘的预算是多少？",
+        "gold": "950万",
+        "predicted": "____________________________________________________________________________XXXiXiXi________==="
+      },
+      {
+        "probe_id": "P8",
+        "question": "复盘会还有谁参加？",
+        "gold": "顾嘉",
+        "predicted": "__________.__.____fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P9",
+        "question": "顾嘉 的职位是什么？",
+        "gold": "人力资源经理",
+        "predicted": "__________)______________________________ffffffff________________0000000<"
+      },
+      {
+        "probe_id": "P10",
+        "question": "顾嘉 的工号是多少？",
+        "gold": "1886",
+        "predicted": "================================"
+      },
+      {
+        "probe_id": "P11",
+        "question": "复盘报告什么时候截止？",
+        "gold": "8月28号",
+        "predicted": "________________________ffffffff__ffffffffffffffff_____,__,_____________"
+      },
+      {
+        "probe_id": "P12",
+        "question": "傅明 的饮食偏好是什么？",
+        "gold": "喜欢早起",
+        "predicted": "00000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      }
+    ]
+  },
+  {
+    "sample_id": "L3-0007",
+    "level": 3,
+    "predictions": [
+      {
+        "probe_id": "P1",
+        "question": "复盘会什么时候？",
+        "gold": "周三下午十点",
+        "predicted": "会的会的____________________ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P2",
+        "question": "复盘会主持人是谁？",
+        "gold": "张伟",
+        "predicted": "__________===============ers.\n____)\n)\n on  on  on\n\n __"
+      },
+      {
+        "probe_id": "P3",
+        "question": "张伟 的职位是什么？",
+        "gold": "采购经理",
+        "predicted": "__________________________ffffffffffffffffffffffffffffffffffffffffffffffffffffffff============"
+      },
+      {
+        "probe_id": "P4",
+        "question": "复盘会会议室在哪？",
+        "gold": "2号楼路演厅",
+        "predicted": "_ _ ________ � � � � � �ffffffff\n\nffffffff\n\nxxxx xxxx xxxx xxxx xxxx(__\n\n__"
+      },
+      {
+        "probe_id": "P5",
+        "question": "复盘会预计多少人？",
+        "gold": "6843",
+        "predicted": "____=!=010000000000000000000000000"
+      },
+      {
+        "probe_id": "P6",
+        "question": "复盘的项目是什么？",
+        "gold": "新产品发布",
+        "predicted": "____________________ffffffff__fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P7",
+        "question": "复盘的预算是多少？",
+        "gold": "3315",
+        "predicted": "____________________________________________________________________________XXXiXiXi________==="
+      },
+      {
+        "probe_id": "P8",
+        "question": "复盘会还有谁参加？",
+        "gold": "彭浩",
+        "predicted": "__________.__.____fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P9",
+        "question": "彭浩 的职位是什么？",
+        "gold": "数据分析主管",
+        "predicted": "___ ________________________________ffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P10",
+        "question": "彭浩 的工号是多少？",
+        "gold": "590万",
+        "predicted": "后1111111111111111111111111111111"
+      },
+      {
+        "probe_id": "P11",
+        "question": "复盘报告什么时候截止？",
+        "gold": "5月16号",
+        "predicted": "________________________ffffffff__ffffffffffffffff_____,__,_____________"
+      },
+      {
+        "probe_id": "P12",
+        "question": "张伟 的饮食偏好是什么？",
+        "gold": "习惯站立工作",
+        "predicted": "________________________ffffffffffffffff__,ffffffff____ffffffff____如的的的的(()<))))的)的的"
+      }
+    ]
+  },
+  {
+    "sample_id": "L3-0008",
+    "level": 3,
+    "predictions": [
+      {
+        "probe_id": "P1",
+        "question": "OKR复盘 由谁参与？",
+        "gold": "吴磊",
+        "predicted": "____________=xxxx\n\n\n\n\n00000000000000003\n0000\n||"
+      },
+      {
+        "probe_id": "P2",
+        "question": "吴磊 向谁汇报？",
+        "gold": "邓超",
+        "predicted": "的的的的的的的的\n{]]]]]]]]]\n{]]]]]]\n{{}}"
+      },
+      {
+        "probe_id": "P3",
+        "question": "目前在做什么项目？",
+        "gold": "OKR复盘",
+        "predicted": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P4",
+        "question": "OKR复盘 什么时候截止？",
+        "gold": "5月17号",
+        "predicted": "____===========================-set=____"
+      },
+      {
+        "probe_id": "P5",
+        "question": "OKR复盘 的预算是多少？",
+        "gold": "290万",
+        "predicted": "________________STEffffffffffffffffffffffffffffffffffffffffffffffff__ffffffff__ffffffff__ffffffff____ffffffff____ffffffff__ffffffff__ffffffffffffffff"
+      },
+      {
+        "probe_id": "P6",
+        "question": "吴磊 是什么职位？",
+        "gold": "研发主管",
+        "predicted": "____________ffffffffffffffff.，,,,,,,,,,,,,,,,_,,_,,_,,__,__,__,__,"
+      },
+      {
+        "probe_id": "P7",
+        "question": "邓超 是什么职位？",
+        "gold": "设计主管",
+        "predicted": "__________)ffffffff)ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P8",
+        "question": "我 的工号是多少？",
+        "gold": "2046",
+        "predicted": "__________________将干将____________________ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P9",
+        "question": "会议室在哪里？",
+        "gold": "深圳分公司",
+        "predicted": "圈\nffffffff\n______________________________ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P10",
+        "question": "领导 的饮食偏好是什么？",
+        "gold": "对花生过敏",
+        "predicted": "线线力线或或或或长地。\n{\nffffffffffffffffffffffffffffffffffffffffffffffff\nffffffff"
+      }
+    ]
+  },
+  {
+    "sample_id": "L3-0009",
+    "level": 3,
+    "predictions": [
+      {
+        "probe_id": "P1",
+        "question": "客户体验改造 的供应商联系人是谁？",
+        "gold": "肖敏",
+        "predicted": "________::::::::::__{____:::::<<<（\n____\n____\n__"
+      },
+      {
+        "probe_id": "P2",
+        "question": "肖敏 是什么职位？",
+        "gold": "运营经理",
+        "predicted": "================/<|<<<<<<<<<<<<<"
+      },
+      {
+        "probe_id": "P3",
+        "question": "供应商报价是多少？",
+        "gold": "60万",
+        "predicted": "将的的的的的ffffffff回像ffffffffffffffffffffffffffffffffffffffffffffffff***ffffffff\n\n__0\n\n1\n\n0\n\n1\n\n1\n\n1\n\n1"
+      },
+      {
+        "probe_id": "P4",
+        "question": "供应商办公地点在哪里？",
+        "gold": "深圳分公司",
+        "predicted": "__ffffffff____============================"
+      },
+      {
+        "probe_id": "P5",
+        "question": "对方代号是什么？",
+        "gold": "2103",
+        "predicted": "：_ __ ___ ___ ______@@__连续xxxxxxxxxxxxxxxxffffffffFFFFFFFFFFFFFFFFffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P6",
+        "question": "交付时间是什么时候？",
+        "gold": "12月26号",
+        "predicted": "操作的ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P7",
+        "question": "对接会议什么时候？",
+        "gold": "周四晚上九点",
+        "predicted": "________________ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P8",
+        "question": "供应商方老板是谁？",
+        "gold": "曾婷",
+        "predicted": "__:ffffffff:<<<<<<<<<<<<<<<<<<<<<<<<<<<<"
+      },
+      {
+        "probe_id": "P9",
+        "question": "曾婷 的职位是什么？",
+        "gold": "技术总监",
+        "predicted": "____________________________________ ____ ____ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+      },
+      {
+        "probe_id": "P10",
+        "question": "客户的饮食偏好是什么？",
+        "gold": "习惯靠窗座位",
+        "predicted": "____________________ffffffffffffffffffffffffffffffffffffffff在ffffffff在__或)__)__________________________ffffffff)"
+      }
+    ]
+  }
+]

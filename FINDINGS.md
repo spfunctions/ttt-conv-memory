@@ -4,6 +4,59 @@ Iteration 1 (this commit) ended with `EM(B)/EM(A) = 0/0.929 = 0.000`. Below: wha
 I think actually broke, ranked by how confident I am, and a concrete iteration-2
 plan with cost estimates.
 
+## Iteration-2 verdict — frozen-base hypothesis confirmed; magnitude is the fix
+
+Phase A finished. Random Gaussian noise of matching magnitude reproduces cond B's
+failure mode, so there is nothing special about the direction TTT learned —
+any perturbation of that magnitude breaks the frozen base.
+
+| condition           | n   | degenerate% |
+|---------------------|-----|-------------|
+| C (vanilla)         | 2617| 11.6 |
+| A' noise 0.01       | 259 | 6.6 |
+| A' noise 0.05       | 259 | 14.3 |
+| A' noise 0.10       | 259 | 20.1 |
+| A' noise 0.20       | 259 | 38.2 |
+| A' noise 0.50       | 259 | 29.7 |
+| A' noise **1.02**   | 259 | **64.1** |
+| A' noise 3.19       | 259 | 99.6 |
+| B (TTT memory)      | 2617| 74.0 |
+
+The vanilla base handles ≤5% relative noise gracefully (deg% basically equal to
+its own intrinsic 11.6% baseline). It enters a transition zone around 10-20%.
+By 100% noise it is mostly broken; by 320% it is entirely token-soup. TTT's
+trained dw lands at 8% (layer 0) → 38% (layer 12) → **319%** (layer 30). The
+deep-layer perturbations are well past the base's absorption budget.
+
+So the bottleneck is **TTT magnitude blow-up at depth**, not "TTT learned the
+wrong direction" and not "frozen base is intrinsically too fragile." The
+direction is roughly random-equivalent; the base is reasonably robust *up to a
+budget*; TTT just overspends that budget by 30× at the deepest layer.
+
+Cheap follow-up experiments, in order of decisiveness per dollar:
+
+1. **Inference-time TTT scaling** (~$1, 30 min). Load the same trained
+   checkpoint, multiply `ttt_proj.weight` and `ttt_conv.weight` by a series of
+   factors (e.g. 0.05, 0.1, 0.2, 0.3) before running cond B. If a smaller dw
+   produces coherent (even if wrong) cond B output, magnitude alone is the
+   gating issue and we can ship a magnitude-controlled retrain. If outputs are
+   still gibberish at every scale, something deeper is wrong with what TTT
+   learned.
+
+2. **Per-layer ablation** (~$1, 30 min). Keep trained TTT for layers 0/6/12 but
+   zero out layers 18/24/30 (the magnitude offenders). Run cond B. If outputs
+   become coherent, the deep layers are specifically where the encoding fails;
+   the shallow ones may even be carrying useful signal.
+
+3. **Retrain with magnitude controls** (~$5, 1 hr). Reduce `ttt_proj` init
+   scale (default Linear init at norm 81.5 → ~10), add weight decay 0.01 on
+   ttt_proj/ttt_conv, optionally clip grad norm at 1.0. 2000 steps, lr 1e-5.
+   Re-run all four conditions. Predicted outcome: dw magnitudes stay <10%,
+   cond B becomes fluent, and we get a real read on whether *information* is
+   encoded in the fast weights (vs just "magnitudes were too big").
+
+Experiment 1 is the cheapest decisive next step.
+
 ## Iteration-2 update — dw magnitude measurement
 
 Before running Phase A's noise sweep we measured ||dw||_F / ||W||_F per TTT layer
