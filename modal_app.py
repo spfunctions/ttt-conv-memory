@@ -242,8 +242,12 @@ def sanity():
 
 
 @app.local_entrypoint()
-def train(steps: int = 400, ttt_chunk: int = 64):
-    train_minimal.remote(steps=steps, ttt_chunk=ttt_chunk)
+def train(steps: int = 400, ttt_chunk: int = 64, seq_len: int = 1024,
+          batch_size: int = 2, grad_accum: int = 2, lr: float = 5e-6):
+    train_minimal.remote(
+        steps=steps, ttt_chunk=ttt_chunk, seq_len=seq_len,
+        batch_size=batch_size, grad_accum=grad_accum, lr=lr,
+    )
 
 
 @app.local_entrypoint()
