@@ -188,6 +188,135 @@ def run_one(cond: str, limit: int | None = None, ttt_chunk: int = 64):
 
 @app.function(
     image=image,
+    gpu="A100-40GB",
+    volumes={"/data": vol},
+    timeout=2 * 3600,
+)
+def phase_a(
+    sample_limit: int = 30,
+    extra_scales: str = "0.01,0.05,0.20,0.50",
+):
+    """Phase A: ablation that tests whether the frozen base is the dominant
+    failure mode of cond B.
+
+    Step 1: with trained TTT params loaded, forward one conversation through the
+    cond B path and measure ||dw||_F / ||W||_F per TTT-bearing layer (output-diff
+    method against the unchanged down_proj.weight).
+
+    Step 2: zero TTT params (functional vanilla Qwen3-8B) and sweep Gaussian noise
+    of given relative Frobenius magnitudes added to down_proj.weight on the same
+    layers. For each magnitude, run cond A' (no context, no TTT, just noisy
+    weights) on a subset of benchmark samples.
+
+    If a noise magnitude near the measured dw produces the same gibberish as
+    cond B, the frozen-base hypothesis is confirmed: any perturbation of similar
+    size breaks the model, regardless of whether it was 'learned' by TTT.
+    """
+    import sys, os, json
+    from pathlib import Path
+    sys.path.insert(0, "/app")
+    sys.path.insert(0, "/opt/repos/In-Place-TTT")
+    import torch
+    from model_utils import (
+        load_ttt_qwen3, load_ttt_params, snapshot_ttt_params,
+        zero_ttt_params, restore_ttt_params,
+        snapshot_down_proj, restore_down_proj,
+        apply_gaussian_noise_to_down_proj, measure_relative_dw,
+    )
+    from run_experiment import run_condition_a_prime, select_samples
+
+    os.makedirs("/data/results", exist_ok=True)
+
+    print("[phase_a] loading model + trained TTT checkpoint")
+    model, tokenizer = load_ttt_qwen3(ttt_chunk=64)
+    load_ttt_params(model, "/data/checkpoints/ttt_minimal.pt")
+    trained = snapshot_ttt_params(model)
+    model.eval()
+
+    layers = [0, 6, 12, 18, 24, 30]
+
+    print("[phase_a] step 1: measuring ||dw||_F / ||W||_F (output-diff method)")
+    bench = json.loads(Path("/app/benchmark_v1.json").read_text())
+    sample0 = bench["samples"][0]
+    measured_mean = None
+    measured_max = None
+    diag: dict = {
+        "sample_id": sample0["sample_id"],
+        "conv_chars": len(sample0["conversation"]),
+    }
+    try:
+        rel_dw = measure_relative_dw(
+            model, tokenizer, sample0["conversation"], layers,
+        )
+        for i, v in rel_dw.items():
+            print(f"    layer {i}: rel_dw = {v:.4f}")
+        measured_mean = sum(rel_dw.values()) / len(rel_dw)
+        measured_max = max(rel_dw.values())
+        print(f"[phase_a] mean = {measured_mean:.4f}, max = {measured_max:.4f}")
+        diag["per_layer_relative_dw"] = {str(k): v for k, v in rel_dw.items()}
+        diag["mean"] = measured_mean
+        diag["max"] = measured_max
+    except Exception as e:
+        import traceback
+        print(f"[phase_a] measurement failed: {e}")
+        traceback.print_exc()
+        diag["measurement_error"] = repr(e)
+    Path("/data/results/phase_a_diagnostic.json").write_text(
+        json.dumps(diag, indent=2)
+    )
+
+    print("[phase_a] step 2: zeroing TTT params (functional vanilla)")
+    zero_ttt_params(model)
+
+    scale_set = {round(float(s), 4) for s in extra_scales.split(",") if s.strip()}
+    if measured_mean is not None:
+        scale_set.add(round(measured_mean, 4))
+    if measured_max is not None:
+        scale_set.add(round(measured_max, 4))
+    scales = sorted(scale_set)
+    print(f"[phase_a] sweep scales: {scales}")
+
+    base_dp_snap = snapshot_down_proj(model, layers)
+    samples = select_samples(bench["samples"], "a_prime", sample_limit)
+    print(f"[phase_a] running cond A' on {len(samples)} samples per scale "
+          f"(~{sum(len(s['probes']) for s in samples)} probes per scale)")
+
+    runs: dict = {}
+    for scale in scales:
+        print(f"\n[phase_a] === scale {scale} ===")
+        restore_down_proj(model, base_dp_snap)
+        info = apply_gaussian_noise_to_down_proj(model, layers, scale, seed=0)
+        for idx, d in info.items():
+            print(f"    layer {idx}: ||W||={d['w_norm']:.2f} "
+                  f"achieved={d['achieved_relative']:.4f}")
+        res = run_condition_a_prime(model, tokenizer, samples)
+        suffix = str(scale).replace(".", "p")
+        out_path = Path(f"/data/results/condition_a_prime_{suffix}.json")
+        out_path.write_text(json.dumps(res, ensure_ascii=False, indent=2))
+        print(f"    -> {out_path}")
+        runs[str(scale)] = {
+            "suffix": suffix,
+            "out": str(out_path),
+            "n_samples": len(samples),
+        }
+
+    restore_down_proj(model, base_dp_snap)
+
+    summary = {
+        "diagnostic": diag,
+        "scales_run": runs,
+        "samples_per_scale": len(samples),
+    }
+    Path("/data/results/phase_a_summary.json").write_text(
+        json.dumps(summary, indent=2)
+    )
+    vol.commit()
+    print("[phase_a] done")
+    return summary
+
+
+@app.function(
+    image=image,
     volumes={"/data": vol},
     timeout=600,
 )
@@ -289,6 +418,47 @@ def quick_smoke(limit: int = 3, steps: int = 20):
     evaluate.remote()
     rep = fetch_results.remote()
     print(json.dumps(rep, indent=2, ensure_ascii=False))
+
+
+@app.local_entrypoint()
+def phase_a_run(sample_limit: int = 30, extra_scales: str = "0.01,0.05,0.20,0.50"):
+    """Run Phase A: ||dw|| measurement + Gaussian-noise sweep."""
+    summary = phase_a.remote(sample_limit=sample_limit, extra_scales=extra_scales)
+    print(json.dumps(summary, indent=2))
+
+
+@app.local_entrypoint()
+def pull_phase_a(out_dir: str = "results"):
+    """Copy Phase A diagnostic + per-scale prediction files from the volume."""
+    import os
+    out = Path(out_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    # First fetch summary to know which suffixes exist
+    try:
+        summary_bytes = fetch_file.remote("/data/results/phase_a_summary.json")
+        (out / "phase_a_summary.json").write_bytes(summary_bytes)
+        summary = json.loads(summary_bytes.decode())
+        print(f"  -> {out / 'phase_a_summary.json'}")
+    except Exception as e:
+        print(f"  no summary: {e}")
+        summary = {"scales_run": {}}
+    # diagnostic
+    try:
+        b = fetch_file.remote("/data/results/phase_a_diagnostic.json")
+        (out / "phase_a_diagnostic.json").write_bytes(b)
+        print(f"  -> {out / 'phase_a_diagnostic.json'}")
+    except Exception as e:
+        print(f"  no diagnostic: {e}")
+    # per-scale
+    for scale, info in summary.get("scales_run", {}).items():
+        suffix = info["suffix"]
+        remote = f"/data/results/condition_a_prime_{suffix}.json"
+        try:
+            b = fetch_file.remote(remote)
+            (out / f"condition_a_prime_{suffix}.json").write_bytes(b)
+            print(f"  -> {out / f'condition_a_prime_{suffix}.json'}")
+        except Exception as e:
+            print(f"  skip {remote}: {e}")
 
 
 @app.local_entrypoint()

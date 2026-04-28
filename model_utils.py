@@ -227,3 +227,129 @@ def ttt_param_norms(model) -> dict[str, float]:
         if "ttt_proj" in name or "ttt_conv" in name:
             out[name] = float(param.detach().norm().item())
     return out
+
+
+# ---------------------------------------------------------------------------
+# Phase A helpers — random Gaussian noise control on down_proj.weight
+# ---------------------------------------------------------------------------
+
+def snapshot_down_proj(model, layer_indices) -> dict:
+    """CPU snapshot of down_proj.weight for the given transformer-block indices."""
+    snap = {}
+    for idx in layer_indices:
+        w = model.model.layers[idx].mlp.down_proj.weight
+        snap[idx] = w.detach().cpu().clone()
+    return snap
+
+
+def restore_down_proj(model, snapshot: dict) -> None:
+    """Restore down_proj.weight from a snapshot dict (in place)."""
+    with torch.no_grad():
+        for idx, w_cpu in snapshot.items():
+            target = model.model.layers[idx].mlp.down_proj.weight
+            target.data.copy_(w_cpu.to(target.device, dtype=target.dtype))
+
+
+def apply_gaussian_noise_to_down_proj(
+    model,
+    layer_indices,
+    relative_scale: float,
+    seed: int = 0,
+) -> dict[int, dict]:
+    """Add Gaussian noise to down_proj.weight scaled to a target relative Frobenius norm.
+
+    ||noise||_F / ||W||_F = relative_scale, applied per layer. Returns a dict of
+    diagnostic info (||W||, ||noise||, achieved relative scale) per layer.
+    """
+    info = {}
+    g = torch.Generator(device="cpu").manual_seed(seed)
+    with torch.no_grad():
+        for idx in layer_indices:
+            w = model.model.layers[idx].mlp.down_proj.weight
+            w_norm = w.detach().float().norm().item()
+            noise = torch.randn(w.shape, generator=g, dtype=torch.float32)
+            noise = noise.to(w.device)
+            noise_norm_raw = noise.norm().item()
+            scale = (relative_scale * w_norm) / max(noise_norm_raw, 1e-12)
+            noise = noise * scale
+            noise_norm = noise.norm().item()
+            w.add_(noise.to(w.dtype))
+            info[idx] = {
+                "w_norm": w_norm,
+                "noise_norm": noise_norm,
+                "achieved_relative": noise_norm / w_norm,
+            }
+    return info
+
+
+@torch.no_grad()
+def measure_relative_dw(
+    model,
+    tokenizer,
+    conversation_text: str,
+    layer_indices,
+    max_seq_len: int = 2048,
+) -> dict[int, float]:
+    """Estimate ||dw||_F / ||W||_F per TTT layer by comparing the MLP output against
+    a recomputed vanilla output that uses the unchanged down_proj.weight.
+
+    Method: forward the conversation through the TTT path (which mutates the cache
+    and produces a TTT-modified MLP output). Hook each TTT-bearing MLP and capture
+    its (input, output). Recompute the vanilla output by running gate_proj/up_proj
+    explicitly and applying the unchanged down_proj.weight via F.linear. The
+    relative difference at the MLP output is `||x · dw^T||_F / ||x · W^T||_F`,
+    which is a tight proxy for `||dw||_F / ||W||_F` for typical hidden states.
+
+    Assumes the TTT layer leaves `mlp.down_proj.weight` unchanged at the parameter
+    level and bypasses it via a local matmul against `W + dw`. This is true for
+    In-Place-TTT (where the .weight tensor is the base, never mutated).
+    """
+    import torch.nn.functional as F
+
+    captured: dict[int, tuple] = {}
+
+    def make_hook(layer_idx, mlp_module):
+        def hook(_module, inputs, output):
+            x = inputs[0]
+            # In-Place-TTT MLP returns (hidden_states, present_w); fall back to
+            # the tensor if it's a plain Module.
+            if isinstance(output, tuple):
+                mlp_out = output[0]
+            else:
+                mlp_out = output
+            captured[layer_idx] = (x.detach(), mlp_out.detach())
+        return hook
+
+    handles = []
+    for idx in layer_indices:
+        mlp = model.model.layers[idx].mlp
+        handles.append(mlp.register_forward_hook(make_hook(idx, mlp)))
+
+    try:
+        inp = tokenizer(
+            conversation_text, return_tensors="pt",
+            truncation=True, max_length=max_seq_len,
+        ).to(model.device)
+        cache = fresh_ttt_cache()
+        _ = model(
+            input_ids=inp["input_ids"],
+            attention_mask=inp["attention_mask"],
+            past_key_values=cache,
+            use_cache=True,
+        )
+    finally:
+        for h in handles:
+            h.remove()
+
+    out: dict[int, float] = {}
+    for idx, (x, y_ttt) in captured.items():
+        mlp = model.model.layers[idx].mlp
+        # Vanilla recompute: re-derive intermediate, apply unchanged down_proj.weight
+        intermediate = F.silu(mlp.gate_proj(x)) * mlp.up_proj(x)
+        y_vanilla = F.linear(intermediate, mlp.down_proj.weight)
+        if mlp.down_proj.bias is not None:
+            y_vanilla = y_vanilla + mlp.down_proj.bias
+        diff = (y_ttt - y_vanilla).float()
+        denom = y_vanilla.float().norm().item()
+        out[idx] = float(diff.norm().item() / max(denom, 1e-12))
+    return out

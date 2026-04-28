@@ -35,11 +35,14 @@ import torch
 from tqdm import tqdm
 
 from model_utils import (
+    apply_gaussian_noise_to_down_proj,
     fresh_ttt_cache,
     kv_stripped_clone,
     load_ttt_params,
     load_ttt_qwen3,
+    restore_down_proj,
     restore_ttt_params,
+    snapshot_down_proj,
     snapshot_ttt_params,
     zero_ttt_params,
 )
@@ -152,6 +155,26 @@ def run_condition_c(model, tokenizer, samples) -> list[dict]:
     return out
 
 
+def run_condition_a_prime(model, tokenizer, samples) -> list[dict]:
+    """A' — Phase A control. Same shape as cond C (no context, fresh cache per probe).
+    Caller is responsible for zeroing TTT params and applying Gaussian noise to
+    the chosen down_proj layers before invoking this function."""
+    out = []
+    for s in tqdm(samples, desc="cond A'"):
+        item = {"sample_id": s["sample_id"], "level": s["level"], "predictions": []}
+        for probe in s["probes"]:
+            prompt = render_prompt(None, probe["question"])
+            ans = generate_answer(model, tokenizer, prompt, past_kv=fresh_ttt_cache())
+            item["predictions"].append({
+                "probe_id": probe["probe_id"],
+                "question": probe["question"],
+                "gold": probe["gold_answer"],
+                "predicted": ans,
+            })
+        out.append(item)
+    return out
+
+
 def run_condition_d(model, tokenizer, samples) -> list[dict]:
     """D — TTT memory + distractor (level 3 only)."""
     out = []
@@ -207,10 +230,17 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--benchmark", type=Path, default=Path("benchmark_v1.json"))
     parser.add_argument("--checkpoint", type=Path, default=Path("checkpoints/ttt_minimal.pt"))
-    parser.add_argument("--condition", choices=["a", "b", "c", "d", "all"], default="all")
+    parser.add_argument("--condition", choices=["a", "b", "c", "d", "a_prime", "all"], default="all")
     parser.add_argument("--out-dir", type=Path, default=Path("results"))
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--ttt-chunk", type=int, default=64)
+    parser.add_argument("--noise-scale", type=float, default=0.05,
+                        help="Phase A: relative Frobenius noise on down_proj (a_prime only).")
+    parser.add_argument("--noise-layers", type=str, default="0,6,12,18,24,30",
+                        help="Comma-separated layer indices to perturb (a_prime only).")
+    parser.add_argument("--noise-seed", type=int, default=0)
+    parser.add_argument("--out-suffix", type=str, default="",
+                        help="Suffix appended to condition_X.json (e.g. _0p05).")
     args = parser.parse_args()
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
@@ -233,10 +263,27 @@ def main():
         t0 = time.time()
 
         # Set TTT param state for this condition
-        if cond in ("a", "c"):
+        if cond in ("a", "c", "a_prime"):
             zero_ttt_params(model)
         else:  # b, d
             restore_ttt_params(model, trained_snapshot)
+
+        # Phase A: apply Gaussian noise to down_proj after zeroing TTT
+        dp_snapshot = None
+        if cond == "a_prime":
+            layers = [int(x) for x in args.noise_layers.split(",") if x.strip()]
+            dp_snapshot = snapshot_down_proj(model, layers)
+            info = apply_gaussian_noise_to_down_proj(
+                model, layers,
+                relative_scale=args.noise_scale,
+                seed=args.noise_seed,
+            )
+            print(f"[run] Phase A noise applied at relative_scale={args.noise_scale}, "
+                  f"layers={layers}")
+            for idx, d in info.items():
+                print(f"    layer {idx}: ||W||={d['w_norm']:.2f} "
+                      f"||noise||={d['noise_norm']:.2f} "
+                      f"achieved={d['achieved_relative']:.4f}")
 
         if cond == "a":
             res = run_condition_a(model, tokenizer, samples)
@@ -246,10 +293,17 @@ def main():
             res = run_condition_c(model, tokenizer, samples)
         elif cond == "d":
             res = run_condition_d(model, tokenizer, samples)
+        elif cond == "a_prime":
+            res = run_condition_a_prime(model, tokenizer, samples)
         else:
             raise ValueError(cond)
 
-        out_path = args.out_dir / f"condition_{cond}.json"
+        # Restore down_proj before next iteration (or before exit) so subsequent
+        # conditions see clean weights.
+        if dp_snapshot is not None:
+            restore_down_proj(model, dp_snapshot)
+
+        out_path = args.out_dir / f"condition_{cond}{args.out_suffix}.json"
         out_path.write_text(json.dumps(res, ensure_ascii=False, indent=2))
         print(f"[run] -> {out_path} ({time.time() - t0:.0f}s)")
 

@@ -4,7 +4,55 @@ Iteration 1 (this commit) ended with `EM(B)/EM(A) = 0/0.929 = 0.000`. Below: wha
 I think actually broke, ranked by how confident I am, and a concrete iteration-2
 plan with cost estimates.
 
-## What I'm now most confident broke the experiment
+## Iteration-2 update — dw magnitude measurement
+
+Before running Phase A's noise sweep we measured ||dw||_F / ||W||_F per TTT layer
+(output-diff method on a real benchmark conversation, against the unchanged
+down_proj.weight). The result invalidated my "5–10%" guess from this file's
+original draft:
+
+| Layer | rel_dw |
+|---|---|
+| 0  | 0.082 |
+| 6  | 0.029 |
+| 12 | 0.382 |
+| 18 | 0.807 |
+| 24 | **1.652** |
+| 30 | **3.188** |
+
+The trained TTT does not produce a small perturbation of `down_proj.weight` —
+at layer 30 it produces an MLP output **3.2× the magnitude of what the vanilla
+weight would produce on the same hidden state**. The deep layers are no longer
+"vanilla MLP plus a nudge"; the TTT term dominates.
+
+This shifts the diagnosis. Frozen-base fragility may still matter, but it is
+not the deepest cause — even a robust base couldn't make sense of an MLP whose
+output at layer 30 is 3× its baseline magnitude in a near-random direction.
+The dominant cause is **TTT magnitude blow-up at depth**.
+
+Implications for the iteration-2 plan:
+- **Phase B as originally drafted (joint LoRA + TTT)** would not necessarily
+  fix this. It might give the base capacity to absorb large dw, but it doesn't
+  attack the magnitude problem at the source.
+- **Cheaper, more targeted attempts** worth trying first:
+  1. **Scale down `ttt_proj`/`ttt_conv` at inference** (no retraining, ~$1).
+     If dw scales linearly with these tensors, halving them should roughly halve
+     the rel_dw. Worth testing whether a smaller perturbation produces coherent
+     (just wrong) cond B outputs.
+  2. **Reduce `ttt_proj` init scale before retraining** (norm 81.5 → ~10).
+     Smaller init = smaller dw throughout training = less exposed to magnitude
+     blow-up.
+  3. **Reduce `ttt_lr`** (currently 3.0 — the inner-loop fast-weight learning
+     rate). Lower ttt_lr should make per-chunk dw updates smaller.
+  4. **Add weight decay or gradient clipping on ttt_proj/ttt_conv** during
+     training (would have prevented the blow-up in the first place).
+
+Phase A still proceeds: it tells us at what relative magnitude a *random*
+perturbation breaks the base in the same way the trained TTT does. That number
+calibrates how much we need to shrink dw to give the model any chance of
+producing coherent text.
+
+## Original hypothesis (pre-measurement, kept for context)
 
 **The frozen base is the deepest cause, not the small training scale.**
 
