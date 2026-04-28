@@ -119,10 +119,33 @@ Realized that retaining `past_h_tail`/`past_t_tail` (zero or otherwise) could le
   - sanity.py check 1: compare logits (more sensitive than greedy text), wrap in try-finally to restore state on failure.
   - Re-train with 5x more steps (2000) and 10x higher LR (5e-5).
 
-### 2026-04-28T10:25:00Z — Re-training (run 3)
+### 2026-04-28T10:25:00Z — Re-training (run 3, lr=5e-5)
 - Command: `modal run modal_app.py::train --steps 2000 --lr 5e-5 --ttt-chunk 64 --seq-len 512`
-- Background task: bork5p1ij (training); b817y8tt7 (Monitor).
-- Expected wall time: ~10 min.
+- **Diverged immediately** — loss 4.25 → 10.07 by step 4 → 14.62 by step 7. lr too high for our setup.
+- Killed at step 400.
+
+### 2026-04-28T10:32:00Z — Re-training (run 4, lr=1e-5) — SUCCESS ✓
+- Command: `modal run modal_app.py::train --steps 2000 --lr 1e-5 --ttt-chunk 64 --seq-len 512`
+- Wall time: ~11 min.
+- Loss curve: 4.25 → 3.83 → 3.25 → 3.21 → ~3.0 average (gentle decline, plateaus around step 1000).
+- TTT param drift (sum of norms): 489.00 → 489.20 (delta 0.20, vs run 1's 0.04 — 5x stronger).
+- ttt_conv per-layer norms (final): layer 0 = 0.111, layer 6 = 0.023, layer 12-30 ≈ 0.012-0.020.
+- Layer 0 learns fastest (sees fresh hidden states with most variance).
+- Cost: ~$0.40.
+
+### 2026-04-28T10:45:00Z — Sanity checks against new checkpoint — 5/5 PASSED ✓
+- Modal app: <https://modal.com/apps/patrick-43806/main/ap-qJjniVyYuDSUQlpUMEbqZt>
+- ✓ Check 1 (trained vs zeroed logits diverge): mean abs diff 4.5625, max 25.5, **top1 token differs** (zero=18, trained=28516). TTT has measurable effect.
+- ✓ Check 2 (TTT params non-zero): proj 81.5, conv 0.111 / 0.023 (layers 0/6 sample).
+- ✓ Check 3 (fast weight reproducible): mean abs diff 0.00e+00 across two forward passes of same input.
+- ✓ Check 4 (input-dependent past_w): mean abs diff 0.0015 between two different inputs. Real signal.
+- ✓ Check 5 (KV-stripped forward): no errors.
+
+### 2026-04-28T10:48:00Z — Conditions A + C launched in parallel
+- Cond C app: <https://modal.com/apps/patrick-43806/main/ap-2szqBEeJ9gEdCur8uBAnlO>
+- Cond A app: <https://modal.com/apps/patrick-43806/main/ap-zlwv8doz8XWsnxiWmE2oCu>
+- Expected wall time: ~1.5 hr each, parallel.
+- Cost estimate: ~$6 for both.
 
 ## Cost tracker
 
