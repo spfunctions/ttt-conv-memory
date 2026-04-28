@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+.python-version
+
+# Local data — model weights, datasets, checkpoints
+*.safetensors
+*.bin
+*.pt
+*.ckpt
+checkpoints/
+hf_cache/
+
+# Logs (we commit a curated logs/ dir but ignore raw runtime files)
+logs/raw/
+*.log
+nohup.out
+
+# Modal
+.modal/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Environment
+.env
+.env.local

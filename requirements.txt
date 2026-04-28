@@ -1,0 +1,36 @@
+# Pinned to match ByteDance-Seed/In-Place-TTT exact versions.
+# Python 3.11 required (flash-attn wheel is cp311-only).
+
+# Core ML stack
+torch==2.8.0
+torchvision==0.23.0
+torchaudio==2.8.0
+
+# Flash attention (the cp311 wheel matches the upstream pin)
+flash-attn==2.8.3
+
+# Transformers (hard pin from upstream)
+transformers==4.57.3
+
+# VeOmni at the upstream-pinned commit
+veomni @ git+https://github.com/ByteDance-Seed/VeOmni.git@9b91e164bea9e17f17ed490aab5e076c2335ca25
+
+# Upstream's other deps
+liger-kernel
+torchdata
+blobfile
+datasets
+diffusers
+tiktoken
+timm
+opt_einsum
+einops
+
+# Our experiment-specific
+matplotlib
+numpy
+tqdm
+huggingface_hub
+
+# Dev / runtime helpers
+modal
