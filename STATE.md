@@ -142,13 +142,52 @@ Realized that retaining `past_h_tail`/`past_t_tail` (zero or otherwise) could le
 - ✓ Check 5 (KV-stripped forward): no errors.
 
 ### 2026-04-28T10:48:00Z — All 4 conditions launched in parallel
-- Cond C app: <https://modal.com/apps/patrick-43806/main/ap-2szqBEeJ9gEdCur8uBAnlO> (ETA 70 min, no context)
-- Cond A app: <https://modal.com/apps/patrick-43806/main/ap-zlwv8doz8XWsnxiWmE2oCu> (ETA 100 min, conversation in context)
-- Cond B app: <https://modal.com/apps/patrick-43806/main/ap-tn5ugcAfSi5O6ngdO6RVPB> (ETA ~2.5h, the experiment)
-- Cond D app: <https://modal.com/apps/patrick-43806/main/ap-E5hjktpILEK9CgtX22ghmJ> (ETA ~50 min, distractor)
-- Wall time estimate: max ~2.5h (B is bottleneck).
-- GPU-hours total estimate: ~5.9 hr → cost ~$12.40.
-- Watchers: bs1wvycjl (B), b0wi37q2m (D), bqqhe4wcw (C), b3otojahm (A).
+- Cond C: ETA 70 min, no context
+- Cond A: ETA 100 min, conversation in context
+- Cond B: ETA ~2.5h, the experiment
+- Cond D: ETA ~50 min, distractor
+
+### 2026-04-28T11:08:00Z — Cond D completed (23 min, 100 samples)
+### 2026-04-28T11:38:00Z — Cond C completed (53 min, 300 samples)
+### 2026-04-28T11:42:00Z — Cond B completed (54 min, 300 samples)
+### 2026-04-28T12:07:00Z — Cond A completed (82 min, 300 samples — bottleneck)
+
+### 2026-04-28T12:10:00Z — Evaluate ran successfully
+
+**HEADLINE NUMBERS:**
+
+| Cond | EM | F1 | n |
+|---|---|---|---|
+| A — context baseline | **0.929** | 0.154 | 2617 |
+| B — TTT memory | **0.000** | 0.007 | 2617 |
+| C — no memory | **0.016** | 0.034 | 2617 |
+| D — TTT + distractor | **0.000** | 0.000 | 1096 |
+
+- `memory_efficiency_ratio = EM(B) / EM(A) = 0.000`
+- `lift_over_no_memory = EM(B) − EM(C) = −0.016` (B even worse than C)
+- **Verdict: NEGATIVE.** TTT fast weights, under our B-mini training, do not substitute for context window — they actively degrade the model below random-baseline.
+
+### 2026-04-28T12:15:00Z — Pulled results to local
+- `results/{report.json, condition_*.json, figures/*.png}` all on local disk.
+
+### 2026-04-28T12:18:00Z — Phase 9: writing RESULTS.md + final commit + push
+- See `RESULTS.md` for full interpretation.
+
+## Total cost (final)
+
+| Phase | $ |
+|---|---|
+| Smoke test | 0.07 |
+| Training run 1 (lr=5e-6, 400 steps) | 0.10 |
+| Training run 2 (OOM, killed early) | 0.05 |
+| Training run 3 (lr=5e-5, killed for divergence) | 0.30 |
+| Training run 4 (lr=1e-5, 2000 steps, success) | 0.40 |
+| Sanity #1 + #2 | 0.25 |
+| 4 conditions in parallel | ~12.40 |
+| Evaluate + pull | 0.10 |
+| **Total** | **~$13.67** |
+
+Within $30/mo Modal free credit.
 
 ## Cost tracker
 

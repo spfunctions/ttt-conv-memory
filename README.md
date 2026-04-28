@@ -8,12 +8,18 @@ We feed a model a dialogue containing facts, let TTT update its fast weights dur
 
 The vehicle is the [In-Place TTT](https://github.com/ByteDance-Seed/In-Place-TTT) architecture from ByteDance-Seed (ICLR 2026 oral) on Qwen3-8B.
 
-## Status
+## Verdict
 
-- See [`STATE.md`](STATE.md) for live progress.
-- See [`SPEC.md`](SPEC.md) for the experimental design (refined from the original brief with research findings).
-- See [`DECISIONS.md`](DECISIONS.md) for every research-level fork in the road and why we took the side we took.
-- See [`RESULTS.md`](RESULTS.md) (if it exists yet) for the final report.
+**NEGATIVE under our minimum-scale (B-mini) training.** EM(A) = 0.929 with conversation in context, EM(B) = 0.000 with TTT memory only, EM(C) = 0.016 no-memory baseline. `memory_efficiency_ratio = EM(B)/EM(A) = 0.000`. The TTT-modified weights actively *degrade* the model below the no-memory baseline — they are perturbation noise, not encoded memory. Full report in [`RESULTS.md`](RESULTS.md).
+
+This is not a refutation of In-Place TTT at paper scale (5000 steps × seq 65536 × 8×H100, joint base+TTT training); it is an answer to the literal experimental question under realistic single-GPU constraints.
+
+## Documents
+
+- [`SPEC.md`](SPEC.md) — refined experimental design
+- [`DECISIONS.md`](DECISIONS.md) — every research-level fork in the road and why
+- [`STATE.md`](STATE.md) — full chronological run log
+- [`RESULTS.md`](RESULTS.md) — final report with numbers, figures, interpretation
 
 ## Layout
 
