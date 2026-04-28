@@ -44,37 +44,41 @@ def long_dummy_text(tokenizer, target_tokens: int = 200) -> str:
 
 
 def check_1_trained_vs_zero(model, tokenizer, trained_snapshot) -> tuple[bool, str]:
-    text = long_dummy_text(tokenizer, target_tokens=200)
+    """Compare logits (not generated text) under zeroed vs trained TTT params on
+    a long single input. Logit comparison is more sensitive than greedy-decode
+    text — even small fast-weight effects show up as logit shifts even if greedy
+    decoding lands on the same first token."""
+    text = long_dummy_text(tokenizer, target_tokens=300) + "\n请问会议室在哪？答："
     inp = tokenizer(text, return_tensors="pt").to(model.device)
-    probe = tokenizer("总结：", return_tensors="pt").to(model.device)
 
-    # Pass 1 — zeroed TTT
-    zero_ttt_params(model)
-    with torch.no_grad():
-        cache_zero = fresh_ttt_cache()
-        _ = model(input_ids=inp["input_ids"], past_key_values=cache_zero, use_cache=True)
-        out_zero = model.generate(
-            input_ids=probe["input_ids"], past_key_values=cache_zero,
-            max_new_tokens=20, do_sample=False,
-            pad_token_id=tokenizer.pad_token_id or tokenizer.eos_token_id,
-        )
-    text_zero = tokenizer.decode(out_zero[0], skip_special_tokens=True)
+    try:
+        # Pass 1: zeroed
+        zero_ttt_params(model)
+        with torch.no_grad():
+            out_zero = model(input_ids=inp["input_ids"], past_key_values=fresh_ttt_cache(), use_cache=True)
+        logits_zero = out_zero.logits[0, -1, :].detach().clone()
 
-    # Pass 2 — trained TTT
-    restore_ttt_params(model, trained_snapshot)
-    with torch.no_grad():
-        cache_trained = fresh_ttt_cache()
-        _ = model(input_ids=inp["input_ids"], past_key_values=cache_trained, use_cache=True)
-        out_trained = model.generate(
-            input_ids=probe["input_ids"], past_key_values=cache_trained,
-            max_new_tokens=20, do_sample=False,
-            pad_token_id=tokenizer.pad_token_id or tokenizer.eos_token_id,
-        )
-    text_trained = tokenizer.decode(out_trained[0], skip_special_tokens=True)
+        # Pass 2: trained
+        restore_ttt_params(model, trained_snapshot)
+        with torch.no_grad():
+            out_trained = model(input_ids=inp["input_ids"], past_key_values=fresh_ttt_cache(), use_cache=True)
+        logits_trained = out_trained.logits[0, -1, :].detach().clone()
+    finally:
+        # Always restore so subsequent checks see trained params
+        restore_ttt_params(model, trained_snapshot)
 
-    if text_zero == text_trained:
-        return False, f"identical outputs:\n  zero    : {text_zero!r}\n  trained : {text_trained!r}"
-    return True, f"trained ≠ zero ✓\n  zero    : {text_zero!r}\n  trained : {text_trained!r}"
+    diff = (logits_zero - logits_trained).abs().mean().item()
+    max_diff = (logits_zero - logits_trained).abs().max().item()
+    top1_zero = int(logits_zero.argmax())
+    top1_trained = int(logits_trained.argmax())
+    same_top1 = top1_zero == top1_trained
+
+    if diff < 1e-6:
+        return False, f"logits identical (mean abs diff = {diff:.2e}) — TTT params have no effect on output"
+    return True, (
+        f"logits differ: mean abs diff = {diff:.4f}, max abs diff = {max_diff:.4f}, "
+        f"top1 token same={same_top1} (zero={top1_zero}, trained={top1_trained})"
+    )
 
 
 def check_2_ttt_params_nonzero(model) -> tuple[bool, str]:

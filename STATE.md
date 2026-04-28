@@ -89,13 +89,26 @@ Realized that retaining `past_h_tail`/`past_t_tail` (zero or otherwise) could le
 - TTT layers in model: `[0, 6, 12, 18, 24, 30]` — index 36 from config silently dropped (Qwen3-8B has 36 layers, max idx is 35). Effectively 6 TTT layers, not 7 as in upstream-recommended config.
 - Cost so far: ~2 min × A100 ≈ $0.07.
 
-### 2026-04-28T10:08:00Z — Training started
-- Trigger fixed (added `--seq-len` / `--batch-size` / `--grad-accum` / `--lr` to local entrypoint).
-- Command: `modal run modal_app.py::train --steps 400 --ttt-chunk 64 --seq-len 1024`
-- Modal app: <https://modal.com/apps/patrick-43806/main/ap-RmNGtoYUtCaMrNPDYmn5Ip>
-- Background task: b3xajhod8 (training run); bja794jef (terminal-signal watcher); b94s3y21i (per-step Monitor for loss).
-- Expected wall time: ~60-90 min for 400 steps × seq 1024 × batch 2 × grad-accum 2.
-- Expected cost: ~$2.50 (A100 $2.10/hr × 1.25h).
+### 2026-04-28T10:08:00Z — Training first attempt (OOM)
+- Command: `modal run modal_app.py::train --steps 400 --ttt-chunk 64 --seq-len 1024 --batch-size 2 --grad-accum 2`
+- Result: CUDA OOM at first backward. 38.58 GB used, 1 GB free, needed 1.16 GB more.
+- Trainable params: 100.8M (TTT) — 12 tensors (6 layers × ttt_proj + ttt_conv).
+- Total: 8.29B (Qwen3-8B + TTT params).
+
+### 2026-04-28T10:14:00Z — Training second attempt with grad checkpointing — SUCCESS ✓
+- Command: `modal run modal_app.py::train --steps 400 --ttt-chunk 64 --seq-len 512 --batch-size 1 --grad-accum 4`
+- Wall time: **~125 seconds total** (model load + dataset + 400 steps).
+- Per-step time: ~0.3s/step (very fast on A100 even with grad-checkpointing).
+- Loss curve: 4.2551 (step 0) → ~3.0 average (final). Noisy due to batch=1.
+- TTT param drift: `ttt_conv` 0.000 → 0.011, `ttt_proj` 81.5 → 81.5 (basically unchanged at this scale).
+- Total TTT param norm sum: 489.00 → 489.04. Small but **gradients did flow**.
+- Checkpoint: `/data/checkpoints/ttt_minimal.pt` (~150 MB on Modal volume).
+- Cost: ~$0.10 (~3 min × A100).
+
+### 2026-04-28T10:18:00Z — Sanity checks
+- Triggered: `modal run modal_app.py::sanity`
+- Background task: bweeghl11 (sanity run); b2c5uqipo (watcher).
+- Will fire 5 checks against the trained checkpoint.
 
 ## Cost tracker
 
