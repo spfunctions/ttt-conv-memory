@@ -59,7 +59,7 @@ def render_prompt(conversation: str | None, question: str) -> str:
 
 
 @torch.no_grad()
-def generate_answer(model, tokenizer, prompt: str, past_kv=None, max_new_tokens: int = 64) -> str:
+def generate_answer(model, tokenizer, prompt: str, past_kv=None, max_new_tokens: int = 32) -> str:
     inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
     if past_kv is None:
         # Provide a fresh TTTDynamicCache so the TTT layer code path has the

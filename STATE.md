@@ -105,10 +105,24 @@ Realized that retaining `past_h_tail`/`past_t_tail` (zero or otherwise) could le
 - Checkpoint: `/data/checkpoints/ttt_minimal.pt` (~150 MB on Modal volume).
 - Cost: ~$0.10 (~3 min × A100).
 
-### 2026-04-28T10:18:00Z — Sanity checks
+### 2026-04-28T10:18:00Z — Sanity checks ran — 2/5 passed
 - Triggered: `modal run modal_app.py::sanity`
-- Background task: bweeghl11 (sanity run); b2c5uqipo (watcher).
-- Will fire 5 checks against the trained checkpoint.
+- Modal app: <https://modal.com/apps/patrick-43806/main/ap-qfcqbh5M2CO3sIDWcoOY41>
+- Results:
+  - ✓ Check 3 (fast weight reproducible): pass — diff = 0.00e+00
+  - ✓ Check 5 (KV-stripped forward): pass — model emitted Chinese answer
+  - ✗ Check 1 (trained vs zero diverges): IndexError in HF generate due to multi-stage cache passing — bug in test, not model
+  - ✗ Check 2 (TTT params non-zero): zero norms reported — actually a side effect of failed check 1 leaving model in zeroed state (no try-finally)
+  - ✗ Check 4 (input-dependent past_w): diff=0 — past_w identical for different inputs ⇒ TTT effect too small / params barely moved off init
+- Diagnosis: training was too weak. ttt_conv 0 → 0.011 means dw signal ≈ 0.5 vs down_proj norm ~64 → ~1% perturbation, hard to detect.
+- Fixes applied:
+  - sanity.py check 1: compare logits (more sensitive than greedy text), wrap in try-finally to restore state on failure.
+  - Re-train with 5x more steps (2000) and 10x higher LR (5e-5).
+
+### 2026-04-28T10:25:00Z — Re-training (run 3)
+- Command: `modal run modal_app.py::train --steps 2000 --lr 5e-5 --ttt-chunk 64 --seq-len 512`
+- Background task: bork5p1ij (training); b817y8tt7 (Monitor).
+- Expected wall time: ~10 min.
 
 ## Cost tracker
 
