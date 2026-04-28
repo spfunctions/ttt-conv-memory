@@ -32,11 +32,12 @@ from model_utils import (
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--steps", type=int, default=400)
-    parser.add_argument("--batch-size", type=int, default=2)
-    parser.add_argument("--grad-accum", type=int, default=2)
+    parser.add_argument("--batch-size", type=int, default=1)
+    parser.add_argument("--grad-accum", type=int, default=4)
     parser.add_argument("--lr", type=float, default=5e-6)
-    parser.add_argument("--seq-len", type=int, default=1024)
+    parser.add_argument("--seq-len", type=int, default=512)
     parser.add_argument("--ttt-chunk", type=int, default=64)
+    parser.add_argument("--no-gradient-checkpointing", action="store_true")
     parser.add_argument("--dataset", type=str, default="HuggingFaceH4/no_robots")
     parser.add_argument("--dataset-split", type=str, default="train")
     parser.add_argument("--out", type=Path, default=Path("checkpoints/ttt_minimal.pt"))
@@ -51,6 +52,10 @@ def main():
     model, tokenizer = load_ttt_qwen3(ttt_chunk=args.ttt_chunk)
     n_total, n_trainable = freeze_base_train_ttt_only(model)
     print(f"[train] trainable: {n_trainable / 1e6:.1f}M / total: {n_total / 1e9:.2f}B")
+
+    if not args.no_gradient_checkpointing:
+        model.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False})
+        print("[train] gradient checkpointing enabled")
 
     init_norms = ttt_param_norms(model)
     print(f"[train] initial TTT param norms (sample): "

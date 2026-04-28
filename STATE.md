@@ -75,6 +75,28 @@ Realized that retaining `past_h_tail`/`past_t_tail` (zero or otherwise) could le
 - Watching for terminal signal via Bash background task (buvik951x).
 - Next: when smoke succeeds, run `modal run modal_app.py::train` (B-mini training, ~4-6h on A100).
 
+### 2026-04-28T09:55:00Z — `workdir` ordering bug, fixed
+- First build complete attempt failed: `.workdir("/app")` after `.add_local_dir(".", remote_path="/app")` is rejected by Modal.
+- Fixed: moved workdir before add_local_dir (any build step after add_local must use copy=True).
+
+### 2026-04-28T10:00:00Z — SMOKE TEST PASSED ✓
+- Modal app: <https://modal.com/apps/patrick-43806/main/ap-aD1IG5D7gfZ9VtSmDXpKj5>
+- Image built clean. Container booted on A100-40G.
+- HF download Qwen3-8B (5 shards) cached to `/data/hf_cache/transformers/` on the volume.
+- Model load: bf16 on cuda:0. ~16GB.
+- Init TTT param norms: `ttt_proj=81.5` (random init), `ttt_conv=0.0` (zero init, expected).
+- Forward pass on 4-token input → logits shape `[1, 4, 151936]` (151936 is Qwen3 vocab).
+- TTT layers in model: `[0, 6, 12, 18, 24, 30]` — index 36 from config silently dropped (Qwen3-8B has 36 layers, max idx is 35). Effectively 6 TTT layers, not 7 as in upstream-recommended config.
+- Cost so far: ~2 min × A100 ≈ $0.07.
+
+### 2026-04-28T10:08:00Z — Training started
+- Trigger fixed (added `--seq-len` / `--batch-size` / `--grad-accum` / `--lr` to local entrypoint).
+- Command: `modal run modal_app.py::train --steps 400 --ttt-chunk 64 --seq-len 1024`
+- Modal app: <https://modal.com/apps/patrick-43806/main/ap-RmNGtoYUtCaMrNPDYmn5Ip>
+- Background task: b3xajhod8 (training run); bja794jef (terminal-signal watcher); b94s3y21i (per-step Monitor for loss).
+- Expected wall time: ~60-90 min for 400 steps × seq 1024 × batch 2 × grad-accum 2.
+- Expected cost: ~$2.50 (A100 $2.10/hr × 1.25h).
+
 ## Cost tracker
 
 | When | What | $ | Cumulative |
