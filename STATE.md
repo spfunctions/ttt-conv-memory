@@ -141,11 +141,14 @@ Realized that retaining `past_h_tail`/`past_t_tail` (zero or otherwise) could le
 - ✓ Check 4 (input-dependent past_w): mean abs diff 0.0015 between two different inputs. Real signal.
 - ✓ Check 5 (KV-stripped forward): no errors.
 
-### 2026-04-28T10:48:00Z — Conditions A + C launched in parallel
-- Cond C app: <https://modal.com/apps/patrick-43806/main/ap-2szqBEeJ9gEdCur8uBAnlO>
-- Cond A app: <https://modal.com/apps/patrick-43806/main/ap-zlwv8doz8XWsnxiWmE2oCu>
-- Expected wall time: ~1.5 hr each, parallel.
-- Cost estimate: ~$6 for both.
+### 2026-04-28T10:48:00Z — All 4 conditions launched in parallel
+- Cond C app: <https://modal.com/apps/patrick-43806/main/ap-2szqBEeJ9gEdCur8uBAnlO> (ETA 70 min, no context)
+- Cond A app: <https://modal.com/apps/patrick-43806/main/ap-zlwv8doz8XWsnxiWmE2oCu> (ETA 100 min, conversation in context)
+- Cond B app: <https://modal.com/apps/patrick-43806/main/ap-tn5ugcAfSi5O6ngdO6RVPB> (ETA ~2.5h, the experiment)
+- Cond D app: <https://modal.com/apps/patrick-43806/main/ap-E5hjktpILEK9CgtX22ghmJ> (ETA ~50 min, distractor)
+- Wall time estimate: max ~2.5h (B is bottleneck).
+- GPU-hours total estimate: ~5.9 hr → cost ~$12.40.
+- Watchers: bs1wvycjl (B), b0wi37q2m (D), bqqhe4wcw (C), b3otojahm (A).
 
 ## Cost tracker
 
