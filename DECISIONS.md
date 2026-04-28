@@ -187,6 +187,40 @@ Eval generation hyperparameters.
 
 ---
 
+## D-008 — Training hyperparameters: lr=1e-5, steps=2000, seq=512, batch=1×grad_accum=4
+
+**Decided:** 2026-04-28T10:32:00Z (after 3 unsuccessful attempts)
+**Status:** active
+
+### Context
+
+Iterated through training settings:
+
+| Run | LR | Steps | Result |
+|---|---|---|---|
+| 1 | 5e-6 | 400 | Stable but tiny effect (ttt_conv 0→0.011, sanity 2/5 pass) |
+| 2 | 5e-6 | 400 | OOM (batch=2 was too big) |
+| 3 | 5e-5 | 2000 | Loss diverged at step 4 (4.25 → 10+) |
+| 4 | 1e-5 | 2000 | Stable, ttt_conv 0→0.111, sanity 5/5 pass ✓ |
+
+### Decision
+
+LR=1e-5, 2000 steps, seq_len=512, batch=1, grad_accum=4 (effective batch 4), gradient checkpointing on.
+
+### Why
+
+- 5e-6 (paper's setting) is stable but produces nearly-zero TTT param drift over 400 steps
+- 5e-5 is unstable (loss diverges); LR is too high for our small TTT-only training subset
+- 1e-5 is the stable middle ground that produces measurable param drift in 2000 steps
+- gradient checkpointing forces use_cache=False (HF's transformers warning), but TTT updates still fire and gradients still flow — just doesn't persist past_w across forwards (which we don't need during training)
+
+### Risk
+
+- Training plateaus around step 1000 — diminishing returns. Future iterations could try seq_len=2048 (more chunks per forward, more learning signal per step) instead of more steps
+- ttt_conv values vary by layer (layer 0 = 0.111, deeper layers ≈ 0.012-0.020). Effect is concentrated in early layers.
+
+---
+
 ## D-007 — SDPA attention, no flash-attn (skip 30+ minute compile)
 
 **Decided:** 2026-04-28T09:35:00Z
