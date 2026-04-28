@@ -4,7 +4,72 @@ Iteration 1 (this commit) ended with `EM(B)/EM(A) = 0/0.929 = 0.000`. Below: wha
 I think actually broke, ranked by how confident I am, and a concrete iteration-2
 plan with cost estimates.
 
-## Iteration-2 verdict — frozen-base hypothesis confirmed; magnitude is the fix
+## Iteration-2 final verdict — past_w contains no conversation memory
+
+The inference-time TTT scaling experiment settled the question.
+α ∈ {0.1, 0.2, 0.3, 0.5, 0.7, 1.0} sweeps `ttt_proj`/`ttt_conv` weights at
+inference time and re-runs cond B. The strongest signal isn't degenerate% —
+it's the rate at which the gold answer appears anywhere in the prediction:
+
+| condition          | n    | gold-in-pred |
+|--------------------|------|--------------|
+| A (context)        | 2617 | **92.2%** |
+| C (vanilla)        | 2617 | 1.6 % |
+| B (original)       | 2617 | **0.0 %** |
+| B-scaled α=0.1     | 259  | 0.0 % |
+| B-scaled α=0.2     | 259  | 0.0 % |
+| B-scaled α=0.3     | 259  | 0.0 % |
+| B-scaled α=0.5     | 259  | 0.0 % |
+| B-scaled α=0.7     | 259  | 0.0 % |
+| B-scaled α=1.0     | 259  | 0.0 % |
+
+Even at α=0.1, where the model is mostly fluent (25% degenerate, mostly
+hallucinated cond-C-style answers) and the TTT perturbation is tiny (layer 30
+rel_dw 0.037), it produces **zero** fact retrievals. Cond C — the same model
+with no memory channel at all — gets 1.6% by chance. So magnitude tame or
+not, past_w simply has no conversation content to retrieve.
+
+This is conclusive: **the TTT did not encode memory**. Frozen-base
++ short-Q&A training gave the optimizer no incentive to push fast weights
+toward "encode something useful." It pushed them toward "produce noise of
+some magnitude." At full magnitude, that noise is large enough to crash the
+base; at small magnitude, it's small enough not to crash but still not
+useful. There is no operating point where this trained TTT is a memory
+channel.
+
+The frozen-base / magnitude story from earlier in this file is real but
+secondary — it explains why cond B's outputs *look* broken at α=1.0, but it
+doesn't explain why retrieval is zero at α=0.1 too. Hypothesis #2 from
+RESULTS.md ("Frozen base + TTT-only training gives the wrong loss
+landscape") is the dominant cause. Hypothesis #1 (training scale) and the
+later "frozen base ≠ perturbation-robust" framing are both real but downstream.
+
+### What it would take to flip the verdict
+
+Iteration-2 has done as much as a frozen-base + Q&A-data setup can teach us.
+Any "iteration-3" worth running has to attack the loss landscape, not the
+mechanism:
+
+- **Joint base+TTT training** (LoRA rank 16 on base, full TTT, 5000 steps,
+  long-context corpus, seq_len 4096). Estimated $20-30 — beyond remaining
+  free Modal credit. Predicted outcome: dw magnitudes stay reasonable and
+  *some* retrieval emerges if the corpus has long-range dependencies. But
+  this is a substantial commitment, and the upside is "maybe TTT-as-memory
+  works at small scale," not "definitely solves Patrick's problem."
+- **Magnitude controls during training** (smaller `ttt_proj` init scale, weight
+  decay 0.01 on TTT params, grad clip). Standalone these would have prevented
+  the magnitude blow-up in iteration-1 but, per the data above, would not
+  have produced retrieval — they'd just have moved cond B from "gibberish"
+  to "fluent hallucination." Worth pairing with the joint training; not
+  worth running alone.
+- **Pivot the question.** The literal question "does TTT replace context for
+  conversational memory at affordable training scale" has a clean negative
+  answer here. Further work should either (a) accept that and move on, or
+  (b) reframe as "what *can* a small TTT learn?" — e.g. style transfer,
+  formatting, single-turn instruction tuning — which are easier loss
+  landscapes that don't require long-range memory.
+
+## Iteration-2 step 2 — Phase A noise sweep (frozen-base sub-hypothesis)
 
 Phase A finished. Random Gaussian noise of matching magnitude reproduces cond B's
 failure mode, so there is nothing special about the direction TTT learned —
@@ -55,9 +120,11 @@ Cheap follow-up experiments, in order of decisiveness per dollar:
    cond B becomes fluent, and we get a real read on whether *information* is
    encoded in the fast weights (vs just "magnitudes were too big").
 
-Experiment 1 is the cheapest decisive next step.
+Experiment 1 was run; see "Iteration-2 final verdict" above. Result:
+the magnitude story alone does not explain failure — past_w contains no
+information at any scale.
 
-## Iteration-2 update — dw magnitude measurement
+## Iteration-2 step 1 — dw magnitude measurement
 
 Before running Phase A's noise sweep we measured ||dw||_F / ||W||_F per TTT layer
 (output-diff method on a real benchmark conversation, against the unchanged
