@@ -145,12 +145,20 @@ def kv_stripped_clone(cache):
     Build a new TTTDynamicCache that:
       - has empty KV slots (as if no past tokens were attended)
       - preserves each layer's `past_w` (the conversation-modified fast weight)
-      - resets `past_h` and `past_t` to zero so the next forward starts at a clean
-        chunk boundary
+      - sets `past_h` and `past_t` to None so the probe forward starts at a
+        clean chunk boundary (NOT concatenated with the conversation's tail)
 
-    After this strip the model is queried with no attention context but with
-    the TTT-modified down-projection weights. This is the whole point of the
-    experiment.
+    The `past_h_tail` / `past_t_tail` saved by the upstream layer logic represent
+    the unfinished last chunk of the conversation. If we kept them, the probe
+    forward would do `torch.cat([past_h_tail, probe_hidden_states])` and could
+    exceed `ttt_chunk`, firing a TTT update that pollutes the fast weights with
+    probe content (the very leak we're trying to prevent).
+
+    Setting them to None forces the layer's `if past_h is None: present_h = hidden_states`
+    branch, which keeps the probe forward as a standalone short input. With our
+    `ttt_chunk=64` and probe length ≈40-60 tokens, the inner
+    `if seq_len < ttt_chunk: return ...` guard then skips the update entirely —
+    `past_w` is read for the down-projection but not modified. Exactly what we want.
     """
     _, _, TTTDynamicCache = _import_ttt()
     new = TTTDynamicCache()
@@ -159,9 +167,9 @@ def kv_stripped_clone(cache):
         for st in cache.ttt_states:
             past_h, past_t, past_w = st
             new.ttt_states.append((
-                torch.zeros_like(past_h) if past_h is not None else None,
-                torch.zeros_like(past_t) if past_t is not None else None,
-                past_w,  # preserve fast weight
+                None,       # drop past_h tail to prevent probe-time update
+                None,       # drop past_t tail
+                past_w,     # preserve fast weight (the whole point)
             ))
     # KV slots intentionally left empty — DynamicCache.key_cache and .value_cache
     # are empty lists by default in fresh instance.
