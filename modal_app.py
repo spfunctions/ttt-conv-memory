@@ -317,6 +317,95 @@ def phase_a(
 
 @app.function(
     image=image,
+    gpu="A100-40GB",
+    volumes={"/data": vol},
+    timeout=2 * 3600,
+)
+def inference_scaling(
+    sample_limit: int = 30,
+    scales: str = "0.05,0.1,0.2,0.3",
+):
+    """Test the magnitude hypothesis: re-run cond B with the trained TTT params
+    multiplicatively scaled at inference time. If a smaller dw produces coherent
+    (even if factually wrong) cond B output, magnitude is the dominant issue
+    and we can ship by adding magnitude controls during training. If outputs
+    remain gibberish at every scale, the TTT's *direction* is also bad.
+
+    For each scale α in `scales`:
+      ttt_proj.weight ← α · trained_ttt_proj.weight
+      ttt_conv.weight ← α · trained_ttt_conv.weight
+    Then forward conv + probe per cond B and save predictions.
+    """
+    import sys, os, json
+    from pathlib import Path
+    sys.path.insert(0, "/app")
+    sys.path.insert(0, "/opt/repos/In-Place-TTT")
+    import torch
+    from model_utils import (
+        load_ttt_qwen3, load_ttt_params, snapshot_ttt_params,
+        restore_ttt_params, measure_relative_dw,
+    )
+    from run_experiment import run_condition_b, select_samples
+
+    os.makedirs("/data/results", exist_ok=True)
+
+    print("[scaling] loading model + trained TTT")
+    model, tokenizer = load_ttt_qwen3(ttt_chunk=64)
+    load_ttt_params(model, "/data/checkpoints/ttt_minimal.pt")
+    trained = snapshot_ttt_params(model)
+    model.eval()
+
+    layers = [0, 6, 12, 18, 24, 30]
+    bench = json.loads(Path("/app/benchmark_v1.json").read_text())
+    sample0 = bench["samples"][0]
+    samples = select_samples(bench["samples"], "b", sample_limit)
+    print(f"[scaling] {len(samples)} samples per scale, "
+          f"~{sum(len(s['probes']) for s in samples)} probes per scale")
+
+    scale_list = [float(s) for s in scales.split(",") if s.strip()]
+    summary: dict = {"scales": {}}
+
+    for scale in scale_list:
+        print(f"\n[scaling] === scale α={scale} ===")
+        # Reset to trained params, then multiply
+        restore_ttt_params(model, trained)
+        with torch.no_grad():
+            for name, p in model.named_parameters():
+                if "ttt_proj" in name or "ttt_conv" in name:
+                    p.data.mul_(scale)
+
+        # Measure post-scale rel_dw to confirm scaling worked
+        try:
+            rel_dw = measure_relative_dw(
+                model, tokenizer, sample0["conversation"], layers,
+            )
+            print(f"[scaling]   post-scale rel_dw: "
+                  f"{ {i: round(v, 4) for i, v in rel_dw.items()} }")
+        except Exception as e:
+            print(f"[scaling]   measurement failed: {e}")
+            rel_dw = {}
+
+        res = run_condition_b(model, tokenizer, samples)
+        suffix = str(scale).replace(".", "p")
+        out_path = Path(f"/data/results/condition_b_scaled_{suffix}.json")
+        out_path.write_text(json.dumps(res, ensure_ascii=False, indent=2))
+        print(f"[scaling]   -> {out_path}")
+        summary["scales"][str(scale)] = {
+            "suffix": suffix,
+            "out": str(out_path),
+            "rel_dw": {str(k): v for k, v in rel_dw.items()},
+        }
+
+    Path("/data/results/inference_scaling_summary.json").write_text(
+        json.dumps(summary, indent=2)
+    )
+    vol.commit()
+    print("[scaling] done")
+    return summary
+
+
+@app.function(
+    image=image,
     volumes={"/data": vol},
     timeout=600,
 )
@@ -425,6 +514,37 @@ def phase_a_run(sample_limit: int = 30, extra_scales: str = "0.01,0.05,0.20,0.50
     """Run Phase A: ||dw|| measurement + Gaussian-noise sweep."""
     summary = phase_a.remote(sample_limit=sample_limit, extra_scales=extra_scales)
     print(json.dumps(summary, indent=2))
+
+
+@app.local_entrypoint()
+def inference_scaling_run(sample_limit: int = 30, scales: str = "0.05,0.1,0.2,0.3"):
+    """Run inference-time TTT scaling: shrink ttt_proj/ttt_conv by α and re-run cond B."""
+    summary = inference_scaling.remote(sample_limit=sample_limit, scales=scales)
+    print(json.dumps(summary, indent=2))
+
+
+@app.local_entrypoint()
+def pull_inference_scaling(out_dir: str = "results"):
+    """Copy inference-scaling summary + per-scale prediction files."""
+    out = Path(out_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    try:
+        b = fetch_file.remote("/data/results/inference_scaling_summary.json")
+        (out / "inference_scaling_summary.json").write_bytes(b)
+        summary = json.loads(b.decode())
+        print(f"  -> {out / 'inference_scaling_summary.json'}")
+    except Exception as e:
+        print(f"  no summary: {e}")
+        summary = {"scales": {}}
+    for scale, info in summary.get("scales", {}).items():
+        suffix = info["suffix"]
+        remote = f"/data/results/condition_b_scaled_{suffix}.json"
+        try:
+            b = fetch_file.remote(remote)
+            (out / f"condition_b_scaled_{suffix}.json").write_bytes(b)
+            print(f"  -> {out / f'condition_b_scaled_{suffix}.json'}")
+        except Exception as e:
+            print(f"  skip {remote}: {e}")
 
 
 @app.local_entrypoint()

@@ -115,6 +115,12 @@ def main():
         scale = float(suffix.replace("p", "."))
         targets.append((f"A' (noise {scale})", f))
 
+    # Inference-time TTT scaling (scaled cond B)
+    for f in sorted(rd.glob("condition_b_scaled_*.json")):
+        suffix = f.stem.replace("condition_b_scaled_", "")
+        scale = float(suffix.replace("p", "."))
+        targets.append((f"B-scaled (α={scale})", f))
+
     rows: list[dict] = []
     for label, path in targets:
         preds = load_predictions(path)
