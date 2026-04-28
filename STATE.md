@@ -60,6 +60,21 @@ Updated continuously. Each entry stamped with UTC timestamp.
 - User switched session to bypass-permissions / auto-mode.
 - Next: commit + push, then trigger Modal image build via `modal run modal_app.py::smoke_image`.
 
+### 2026-04-28T09:30:00Z — three architectural bug fixes after deep upstream code read
+Read `inference_model/hf_qwen3/modeling_qwen3.py` carefully. Found:
+1. **`ttt_chunk` was 1024 — TTT update would never fire.** Measured benchmark conv tokens: 123-158, probe tokens: 3-10. The upstream guard `if seq_len < self.ttt_chunk: return ..., present_down_proj_w` means convs at ttt_chunk=1024 just early-return without updating. Fixed: ttt_chunk=64 (DECISIONS D-002 revised). All 300 convs now trigger update; all 2620 probes safely below threshold.
+2. **`config.ttt_mode = False` is a no-op at runtime.** Upstream attaches ttt_proj/ttt_conv at __init__ gated on config flags; mutating them after init does nothing. Replaced disable_ttt_updates / enable_ttt_updates with `zero_ttt_params` + `snapshot_ttt_params` + `restore_ttt_params`. For conditions A/C: zero TTT params (functional vanilla); for B/D: restore trained snapshot.
+3. **flash-attn skipped, use SDPA.** Modal pip mirror has no prebuilt flash-attn wheel for cu128/torch2.8/cp311 → falls back to source compile (30+ minutes). Upstream code dispatches via `config._attn_implementation`; SDPA works without flash-attn. Saved per-image-build time.
+
+### 2026-04-28T09:35:00Z — kv_stripped_clone fix
+Realized that retaining `past_h_tail`/`past_t_tail` (zero or otherwise) could let probe forward concatenate with them and exceed `ttt_chunk`, firing a TTT update during probe and polluting the fast weights with probe content. Fixed: drop tails to None so the layer's `if past_h is None: present_h = hidden_states` branch keeps probe forward standalone.
+
+### 2026-04-28T09:38:00Z — Modal smoke build started
+- First build attempt (with flash-attn) cancelled at ~5 min into source compile.
+- Restarted with debian_slim base + no flash-attn → fast image build in progress.
+- Watching for terminal signal via Bash background task (buvik951x).
+- Next: when smoke succeeds, run `modal run modal_app.py::train` (B-mini training, ~4-6h on A100).
+
 ## Cost tracker
 
 | When | What | $ | Cumulative |

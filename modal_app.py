@@ -67,14 +67,15 @@ image = (
     .run_commands(
         "git clone https://github.com/ByteDance-Seed/In-Place-TTT.git /opt/repos/In-Place-TTT",
     )
+    .workdir("/app")
     .env({
         "TTT_REPO": "/opt/repos/In-Place-TTT",
         "PYTHONPATH": "/opt/repos/In-Place-TTT:/app",
         "HF_HOME": "/data/hf_cache",
         "TRANSFORMERS_CACHE": "/data/hf_cache/transformers",
     })
+    # add_local_dir must be LAST (any build step after it requires copy=True)
     .add_local_dir(".", remote_path="/app")
-    .workdir("/app")
 )
 
 vol = modal.Volume.from_name("ttt-conv-memory-vol", create_if_missing=True)
@@ -98,7 +99,7 @@ def smoke_load_qwen3():
     import torch
     from model_utils import load_ttt_qwen3, ttt_param_norms
     print("[smoke] loading model...")
-    model, tokenizer = load_ttt_qwen3(ttt_chunk=1024)
+    model, tokenizer = load_ttt_qwen3(ttt_chunk=64)
     print(f"[smoke] device: {next(model.parameters()).device}")
     print(f"[smoke] dtype: {next(model.parameters()).dtype}")
     print(f"[smoke] init TTT param norms (first 3): "
@@ -139,6 +140,7 @@ def sanity_checks(checkpoint: str | None = None):
 def train_minimal(
     steps: int = 400,
     ttt_chunk: int = 64,
+    seq_len: int = 1024,
     batch_size: int = 2,
     grad_accum: int = 2,
     lr: float = 5e-6,
@@ -152,7 +154,7 @@ def train_minimal(
         "--grad-accum", str(grad_accum),
         "--lr", str(lr),
         "--ttt-chunk", str(ttt_chunk),
-        "--seq-len", str(ttt_chunk),
+        "--seq-len", str(seq_len),
         "--out", "/data/checkpoints/ttt_minimal.pt",
     ]
     print(f"[train_minimal] {' '.join(cmd)}")
@@ -275,7 +277,7 @@ def full_pipeline(steps: int = 400, ttt_chunk: int = 64):
 def quick_smoke(limit: int = 3, steps: int = 20):
     """Smoke test: tiny train + tiny eval. Sanity-check the whole pipeline cheaply."""
     print("=== smoke train ===")
-    train_minimal.remote(steps=steps, ttt_chunk=1024)
+    train_minimal.remote(steps=steps, ttt_chunk=64)
     print("=== smoke conditions ===")
     for c in ("a", "c", "b"):
         run_one.remote(cond=c, limit=limit)
